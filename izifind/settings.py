@@ -31,7 +31,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'connexion',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -39,7 +38,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth.registration'
+    'rest_auth.registration',
+    'dj_rest_auth',
 ]
 
 SITE_ID = 1
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'izifind.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'connexion/templates'),],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,8 +139,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'connexion/static/css'),
-    os.path.join(BASE_DIR, 'connexion/static/js'),
+    os.path.join(BASE_DIR, 'static/css'),
+    os.path.join(BASE_DIR, 'static/js'),
 ]
 
 
@@ -159,7 +159,7 @@ EMAIL_HOST_USER = "leonardovodouhe06@gmail.com"
 
 
 # EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-my_way = os.path.join(BASE_DIR, "connexion/.env.json")
+my_way = os.path.join(BASE_DIR, ".env.json")
 
 
 with open(my_way) as json_file:
@@ -169,3 +169,11 @@ EMAIL_HOST_PASSWORD = config_data["email_host_password"]
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 PASSWORD_RESET_TIMEOUT = 14400
+
+
+# Configurer allauth pour la gestion des e-mails
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Vous pouvez utiliser 'none' si la vérification n'est pas requise
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3  # Nombre de jours avant l'expiration du lien de confirmation
