@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+				<h2 class="text-primary mt-3 mb-3">Inscription</h2>
+				<form method="post" action="{% url 'register' %}">
+					{% csrf_token %}
+					<label for="email" class="form-label">Email</label>
+					<input type="email" class="form-control" id="email" name="email" required>
+
+					<label for="password" class="form-label">Mot de passe</label>
+					<input type="password" class="form-control" id="password1" name="password" required>
+
+					<label for="first_name" class="form-label">Prénom</label>
+					<input type="text" class="form-control" id="first_name" name="first_name" required>
+
+					<label for="last_name" class="form-label">Nom de famiile</label>
+					<input type="text" class="form-control" id="last_name" name="last_name" required>
+
+					<button class="btn btn-success mt-3" type="submit">S'inscrire</button>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

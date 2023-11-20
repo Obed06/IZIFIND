@@ -31,18 +31,35 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_auth',
-    'django.contrib.sites',
+    #'django.contrib.sites',
+    #'rest_framework.authtoken',
+    #'rest_auth',
+    #'rest_auth.registration',
+    #'dj_rest_auth',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_auth.registration',
-    'dj_rest_auth',
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'users',
 ]
 
-SITE_ID = 1
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+
+#REST_USE_JWT = True
+
+
+#SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -55,11 +72,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'izifind.urls'
+AUTH_USER_MODEL = 'users.User'
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,16 +129,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
-}
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -157,8 +166,6 @@ EMAIL_FROM = "leonardovodouhe06@gmail.com"
 EMAIL_HOST_USER = "leonardovodouhe06@gmail.com"
 
 
-
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 my_way = os.path.join(BASE_DIR, ".env.json")
 
 
@@ -172,8 +179,8 @@ PASSWORD_RESET_TIMEOUT = 14400
 
 
 # Configurer allauth pour la gestion des e-mails
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Vous pouvez utiliser 'none' si la vérification n'est pas requise
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3  # Nombre de jours avant l'expiration du lien de confirmation
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
