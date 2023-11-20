@@ -47,3 +47,55 @@ def login(request):
 def sign_up(request):
 	return render(request, 'register.html')
 
+
+@api_view(['POST'])
+def generate_password_and_send_email(request):
+    if request.method == 'POST':
+        email = request.data.get('email')  # Utilisez request.data pour obtenir les données du corps de la requête
+
+        # Vérifier si l'e-mail existe dans la base de données
+        try:
+            User = get_user_model()
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"message": "L'e-mail n'existe pas dans la base de données."}, status=400)
+
+        # Générer un mot de passe aléatoire de 20 caractères
+        password_length = 8 
+        characters = string.ascii_letters + string.digits + string.punctuation
+        generated_password = ''.join(secrets.choice(characters) for _ in range(password_length))
+
+        # Générer un sel aléatoire (utiliser la fonction de Django)
+        salt = None
+
+        # Hacher le mot de passe généré avec l'algorithme SHA-2
+        hashed_generated_password = make_password(generated_password, salt=salt)
+
+        # Enregistrer le mot de passe haché comme ancien mot de passe pour l'utilisateur
+        user.set_password(hashed_generated_password)
+        user.save()
+
+        # Obtenir l'heure actuelle
+        current_time = timezone.now()
+
+        # Calculer l'heure d'expiration (360 secondes plus tard)
+        expiration_time = current_time + timezone.timedelta(seconds=420)
+
+        # Construire le message de l'e-mail avec le mot de passe généré (non haché)
+        subject = "Demande de réinitialisation de mot de passe"
+        message = render_to_string('message_email.txt', {'generated_password': generated_password})
+
+        from_email = "noreply@izifind.com"
+        recipient_list = [email]
+
+        # Envoyer l'e-mail
+        send_mail(subject, message, from_email, recipient_list)
+
+        response_data = {
+            "message": "Un e-mail a été envoyé avec les instructions de réinitialisation.",
+            "password": generated_password,
+            "expiration_time": expiration_time,
+        }
+
+        return Response(response_data)
+
