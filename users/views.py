@@ -1,27 +1,21 @@
-from django.shortcuts import render, redirect
-from rest_framework.generics import CreateAPIView
-from django.contrib.auth import get_user_model
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.response import Response
-from .serializers import RegisterUserSerializer
-
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import PasswordResetConfirmView
-
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail, BadHeaderError
 from django.urls import reverse
-from django.views import View
-from rest_framework.decorators import api_view
-import string
-import secrets
-from django.contrib.auth.hashers import make_password
-from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth.tokens import default_token_generator
+from django.core.exceptions import ValidationError as DjangoValidationError
 
-from django.contrib.auth import authenticate, login
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import AllowAny
+from rest_framework import status
+from rest_framework.exceptions import ValidationError as DRFValidationError
+
+from .serializers import RegisterUserSerializer
+from .models import User
 
 
 
@@ -32,70 +26,50 @@ class RegisterUserView(CreateAPIView):
 	serializer_class = RegisterUserSerializer
 
 
-def login(request):
+@api_view(['POST'])
+def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.data.get('email')
+        password = request.data.get('password')
 
-        # Appel à TokenObtainPairView pour obtenir le token d'accès
-        response = TokenObtainPairView.as_view()(request)
-        return response
+        user = authenticate(request, email=email, password=password)
 
-    return render(request, 'login.html')
-
-
-def sign_up(request):
-	return render(request, 'register.html')
+        if user is not None:
+            login(request, user)
+            return Response({'message': "Connexion réussie."}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': "Identifiant ou mot de passe incorrect."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['POST'])
-def generate_password_and_send_email(request):
+def reset_password_email(request):
     if request.method == 'POST':
-        email = request.data.get('email')  # Utilisez request.data pour obtenir les données du corps de la requête
+        email = request.data.get('email')
 
-        # Vérifier si l'e-mail existe dans la base de données
         try:
-            User = get_user_model()
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({"message": "L'e-mail n'existe pas dans la base de données."}, status=400)
+            return Response({'message': 'Utilisateur non trouvé.'}, status=status.HTTP_404_NOT_FOUND)
 
-        # Générer un mot de passe aléatoire de 20 caractères
-        password_length = 8 
-        characters = string.ascii_letters + string.digits + string.punctuation
-        generated_password = ''.join(secrets.choice(characters) for _ in range(password_length))
+        # Générer un token de réinitialisation de mot de passe
+        token = default_token_generator.make_token(user)
 
-        # Générer un sel aléatoire (utiliser la fonction de Django)
-        salt = None
+        # Construire l'URL complète
+        reset_url = f'http://localhost:8000/reset-password/{urlsafe_base64_encode(force_bytes(user.pk))}/{token}'
+        
+        # Envoyer l'e-mail avec le lien de réinitialisation de mot de passe
+        subject = 'Réinitialisation de mot de passe'
+        message = f'Bonjour {email},\n\nVous avez demandé la réinitialisation de votre mot de passe.\n\
+Si c\'est le cas, cliquez sur le lien suivant pour réinitialiser votre mot de passe : {reset_url}. \n\nAssurez-vous de changer ce mot de passe dès que possible.\n\n\
+Merci,\n\
+L\'équipe d\'IZIFIND'
+        from_email = 'leonardovodouhe06@gmail.com'
+        to_email = [user.email]
 
-        # Hacher le mot de passe généré avec l'algorithme SHA-2
-        hashed_generated_password = make_password(generated_password, salt=salt)
-
-        # Enregistrer le mot de passe haché comme ancien mot de passe pour l'utilisateur
-        user.set_password(hashed_generated_password)
-        user.save()
-
-        # Obtenir l'heure actuelle
-        current_time = timezone.now()
-
-        # Calculer l'heure d'expiration (360 secondes plus tard)
-        expiration_time = current_time + timezone.timedelta(seconds=420)
-
-        # Construire le message de l'e-mail avec le mot de passe généré (non haché)
-        subject = "Demande de réinitialisation de mot de passe"
-        message = render_to_string('message_email.txt', {'generated_password': generated_password})
-
-        from_email = "noreply@izifind.com"
-        recipient_list = [email]
-
-        # Envoyer l'e-mail
-        send_mail(subject, message, from_email, recipient_list)
-
-        response_data = {
-            "message": "Un e-mail a été envoyé avec les instructions de réinitialisation.",
-            "password": generated_password,
-            "expiration_time": expiration_time,
-        }
-
-        return Response(response_data)
-
+        try:
+            send_mail(subject, message, from_email, to_email, fail_silently=False)
+            return Response({'message': 'Un e-mail de réinitialisation de mot de passe a été envoyé.'}, status=status.HTTP_200_OK)
+        except BadHeaderError:
+            return Response({'message': 'Erreur lors de l\'envoi de l\'e-mail.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except (DjangoValidationError, DRFValidationError) as e:
+            return Response({'message': 'Erreur lors de la validation des données.', 'errors': e.detail}, status=status.HTTP_400_BAD_REQUEST)

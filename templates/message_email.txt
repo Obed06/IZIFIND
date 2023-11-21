@@ -1,9 +1,0 @@
-Bonjour,
-
-Vous avez demandé la réinitialisation de votre mot de passe. Voici votre nouveau mot de passe : 
-{{ generated_password }}
-
-Assurez-vous de changer ce mot de passe dès que possible.
-
-Merci,
-L'équipe d'izifind

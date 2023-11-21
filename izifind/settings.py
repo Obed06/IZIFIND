@@ -20,7 +20,6 @@ ALLOWED_HOSTS = [
     'localhost'
 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -30,8 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    #'django.contrib.sites',
+    'django.contrib.sites',
+    
     #'rest_framework.authtoken',
     #'rest_auth',
     #'rest_auth.registration',
@@ -41,7 +40,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt',
     'users',
 ]
 
@@ -56,10 +55,10 @@ REST_FRAMEWORK = {
 }
 
 
-#REST_USE_JWT = True
+REST_USE_JWT = True
 
 
-#SITE_ID = 1
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,6 +72,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'izifind.urls'
 AUTH_USER_MODEL = 'users.User'
+
 
 
 TEMPLATES = [
@@ -147,7 +147,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
+STATICFILES_DIRS =[
     os.path.join(BASE_DIR, 'static/css'),
     os.path.join(BASE_DIR, 'static/js'),
 ]
