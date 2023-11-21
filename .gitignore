@@ -1,4 +1,10 @@
-push.sh
+# .gitignore
+
+db.sqlite3
+__pycache__
 .env.json
-templates/
-static/
+*.pyc
+/templates/
+/static/
+push.sh
+
