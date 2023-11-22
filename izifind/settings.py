@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'rest_framework_simplejwt',
+    
     'users',
+    'article'
 ]
 
 REST_FRAMEWORK = {
