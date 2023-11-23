@@ -1,10 +1,10 @@
-from rest_framework import serializers
+from django import forms
 from .models import Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
 
 
 
 
-class CarSerializer(serializers.ModelSerializer):
+class CarForm(forms.ModelForm):
     class Meta:
         model = Car
         fields = [
@@ -23,7 +23,7 @@ class CarSerializer(serializers.ModelSerializer):
         ]
 
 
-class MotorcycleSerializer(serializers.ModelSerializer):
+class MotorcycleForm(forms.ModelForm):
     class Meta:
         model = Motorcycle
         fields = [
@@ -41,7 +41,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
         ]
 
 
-class KeySerializer(serializers.ModelSerializer):
+class KeyForm(forms.ModelForm):
     class Meta:
         model = Key
         fields = [
@@ -54,7 +54,7 @@ class KeySerializer(serializers.ModelSerializer):
         ]
 
 
-class USBKeySerializer(serializers.ModelSerializer):
+class USBKeyForm(forms.ModelForm):
     class Meta:
         model = USBKey
         fields = [
@@ -65,7 +65,7 @@ class USBKeySerializer(serializers.ModelSerializer):
         ]
 
 
-class MobilePhoneSerializer(serializers.ModelSerializer):
+class MobilePhoneForm(forms.ModelForm):
     class Meta:
         model = MobilePhone
         fields = [
@@ -80,7 +80,7 @@ class MobilePhoneSerializer(serializers.ModelSerializer):
         ]
 
 
-class AnimalSerializer(serializers.ModelSerializer):
+class AnimalForm(forms.ModelForm):
     class Meta:
         model = Animal
         fields = [
@@ -94,7 +94,7 @@ class AnimalSerializer(serializers.ModelSerializer):
         ]
 
 
-class IndividualSerializer(serializers.ModelSerializer):
+class IndividualForm(forms.ModelForm):
     class Meta:
         model = Individual
         fields = [

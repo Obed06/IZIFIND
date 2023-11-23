@@ -22,8 +22,8 @@ class Car(Item):
 	owner_name = models.CharField(max_length=255)
 	owner_phone = models.CharField(max_length=20)
 	owner_email = models.EmailField()
-	documents = models.FileField(upload_to='car_documents/')
-	interior_description = models.TextField()
+	documents = models.FileField(upload_to='car_documents/', blank=True)
+	interior_description = models.TextField(blank=True)
 	has_gps = models.BooleanField(default=False)
 
 	def __str__(self):
@@ -42,8 +42,8 @@ class Motorcycle(Item):
 	owner_name = models.CharField(max_length=255)
 	owner_phone = models.CharField(max_length=20)
 	owner_email = models.EmailField()
-	documents = models.FileField(upload_to='motorcycle_documents/')
-	additional_details = models.TextField()
+	documents = models.FileField(upload_to='motorcycle_documents/', blank=True)
+	additional_details = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.model
@@ -56,7 +56,7 @@ class Key(Item):
 	owner_email = models.EmailField()
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
-	additional_details = models.TextField()
+	additional_details = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.owner_email
@@ -66,7 +66,7 @@ class USBKey(Item):
 	description = models.CharField(max_length=255)
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
-	additional_details = models.TextField()
+	additional_details = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.description
@@ -81,7 +81,7 @@ class MobilePhone(Item):
 	owner_email = models.EmailField()
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
-	additional_details = models.TextField()
+	additional_details = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.owner_email
@@ -94,7 +94,7 @@ class Animal(Item):
 	owner_email = models.EmailField()
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
-	additional_details = models.TextField()
+	additional_details = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.owner_email
@@ -105,7 +105,7 @@ class Individual(Item):
 	email = models.EmailField()
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
-	additional_details = models.TextField()
+	additional_details = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.email
