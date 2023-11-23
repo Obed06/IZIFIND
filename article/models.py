@@ -1,5 +1,5 @@
 from django.db import models
-
+import json
 
 
 
@@ -109,3 +109,4 @@ class Individual(Item):
 
 	def __str__(self):
 		return self.email
+
