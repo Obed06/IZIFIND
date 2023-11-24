@@ -20,8 +20,7 @@ class CarSerializer(serializers.ModelSerializer):
             'owner_phone',
             'owner_email',
             'has_gps',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -40,8 +39,7 @@ class MotorcycleSerializer(serializers.ModelSerializer):
             'owner_name',
             'owner_phone',
             'owner_email',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -55,8 +53,7 @@ class KeySerializer(serializers.ModelSerializer):
             'owner_email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -68,8 +65,7 @@ class USBKeySerializer(serializers.ModelSerializer):
             'description',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -85,8 +81,7 @@ class MobilePhoneSerializer(serializers.ModelSerializer):
             'owner_email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -101,8 +96,7 @@ class AnimalSerializer(serializers.ModelSerializer):
             'owner_email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -115,6 +109,5 @@ class IndividualSerializer(serializers.ModelSerializer):
             'email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]

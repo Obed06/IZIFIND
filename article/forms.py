@@ -21,7 +21,6 @@ class CarForm(forms.ModelForm):
             'owner_email',
             'has_gps',
             'is_find',
-            'share_location'
         ]
 
 
@@ -40,8 +39,7 @@ class MotorcycleForm(forms.ModelForm):
             'owner_name',
             'owner_phone',
             'owner_email',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -55,8 +53,7 @@ class KeyForm(forms.ModelForm):
             'owner_email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -68,8 +65,7 @@ class USBKeyForm(forms.ModelForm):
             'description',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -85,8 +81,7 @@ class MobilePhoneForm(forms.ModelForm):
             'owner_email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -101,8 +96,7 @@ class AnimalForm(forms.ModelForm):
             'owner_email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
 
 
@@ -115,6 +109,5 @@ class IndividualForm(forms.ModelForm):
             'email',
             'last_seen_location',
             'date_and_time_of_loss',
-            'is_find',
-            'share_location'
+            'is_find'
         ]
