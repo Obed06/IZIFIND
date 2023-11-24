@@ -21,7 +21,7 @@ from .forms import (
     AnimalForm,
     IndividualForm,
 )
-
+import requests
 
 
 class CarViewSet(viewsets.ModelViewSet):
@@ -248,3 +248,28 @@ class IndividualViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+
+
+def share_location_api():
+    # Remplacez YOUR_GOOGLE_MAPS_API_KEY par votre clé d'API Google Maps
+    api_key = "YOUR_GOOGLE_MAPS_API_KEY"
+    
+    # Assurez-vous d'ajuster l'URL en fonction de votre API de géocodage inversé
+    url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng=XX.XXXXX,YY.YYYYY&key={api_key}"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+
+        if response.status_code == 200 and data['status'] == 'OK':
+            # Récupérez la première adresse trouvée dans la réponse
+            formatted_address = data['results'][0]['formatted_address']
+            return formatted_address
+        else:
+            # Gérez les erreurs selon vos besoins
+            return "Erreur lors de la récupération de la localisation"
+
+    except Exception as e:
+        # Gérez les exceptions selon vos besoins
+        return "Erreur lors de la récupération de la localisation"

@@ -25,6 +25,8 @@ class Car(Item):
 	documents = models.FileField(upload_to='car_documents/', blank=True)
 	interior_description = models.TextField(blank=True)
 	has_gps = models.BooleanField(default=False)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.model
@@ -44,6 +46,8 @@ class Motorcycle(Item):
 	owner_email = models.EmailField()
 	documents = models.FileField(upload_to='motorcycle_documents/', blank=True)
 	additional_details = models.TextField(blank=True)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.model
@@ -57,6 +61,8 @@ class Key(Item):
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
 	additional_details = models.TextField(blank=True)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.owner_email
@@ -67,6 +73,8 @@ class USBKey(Item):
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
 	additional_details = models.TextField(blank=True)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.description
@@ -82,6 +90,8 @@ class MobilePhone(Item):
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
 	additional_details = models.TextField(blank=True)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.owner_email
@@ -95,6 +105,8 @@ class Animal(Item):
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
 	additional_details = models.TextField(blank=True)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.owner_email
@@ -106,6 +118,8 @@ class Individual(Item):
 	last_seen_location = models.CharField(max_length=255)
 	date_and_time_of_loss = models.DateTimeField()
 	additional_details = models.TextField(blank=True)
+	is_find = models.BooleanField(default=False)
+	share_location = models.CharField(max_length=255, blank=True, null=True)
 
 	def __str__(self):
 		return self.email
