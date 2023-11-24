@@ -249,6 +249,15 @@ class IndividualViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+def get_instances_with_is_find_true():
+    result_instances = []
+    classes_to_check = [CarViewSet, MotorcycleViewSet, KeyViewSet, USBKeyViewSet, MobilePhoneViewSet, AnimalViewSet, IndividualViewSet]
+    
+    for class_viewset in classes_to_check:
+        instances = class_viewset.queryset.filter(is_find=True)
+        result_instances.extend(instances)
+
+    return result_instances
 
 
 def share_location_api():
