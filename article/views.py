@@ -1,7 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
+import requests
+from decouple import config
+
 from .models import Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
 from .serializers import (
     CarSerializer,
@@ -21,7 +26,8 @@ from .forms import (
     AnimalForm,
     IndividualForm,
 )
-import requests
+
+
 
 
 class CarViewSet(viewsets.ModelViewSet):
@@ -249,36 +255,53 @@ class IndividualViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def get_instances_with_is_find_true():
-    result_instances = []
-    classes_to_check = [CarViewSet, MotorcycleViewSet, KeyViewSet, USBKeyViewSet, MobilePhoneViewSet, AnimalViewSet, IndividualViewSet]
-    
-    for class_viewset in classes_to_check:
-        instances = class_viewset.queryset.filter(is_find=True)
-        result_instances.extend(instances)
-
-    return result_instances
 
 
-def share_location_api():
-    # Remplacez YOUR_GOOGLE_MAPS_API_KEY par votre clé d'API Google Maps
-    api_key = "YOUR_GOOGLE_MAPS_API_KEY"
-    
-    # Assurez-vous d'ajuster l'URL en fonction de votre API de géocodage inversé
-    url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng=XX.XXXXX,YY.YYYYY&key={api_key}"
+TOMTOM_API_KEY = config('TOMTOM_API_KEY')
 
+def location_view(request, id):
     try:
-        response = requests.get(url)
-        data = response.json()
+        result_data = []
 
-        if response.status_code == 200 and data['status'] == 'OK':
-            # Récupérez la première adresse trouvée dans la réponse
-            formatted_address = data['results'][0]['formatted_address']
-            return formatted_address
-        else:
-            # Gérez les erreurs selon vos besoins
-            return "Erreur lors de la récupération de la localisation"
+        classes_to_check = [
+            CarViewSet,
+            MotorcycleViewSet,
+            KeyViewSet,
+            USBKeyViewSet,
+            MobilePhoneViewSet,
+            AnimalViewSet,
+            IndividualViewSet
+        ]
 
-    except Exception as e:
-        # Gérez les exceptions selon vos besoins
-        return "Erreur lors de la récupération de la localisation"
+        for class_viewset in classes_to_check:
+            model_instance = get_object_or_404(class_viewset.queryset, id=id, is_find=True)
+
+            if not model_instance.found_location:
+                raise ValueError(f"Found location not provided for {model_instance.__class__.__name__} with id {model_instance.id}")
+
+            base_url = "https://api.tomtom.com/search/2/search/"
+            params = {
+                'key': TOMTOM_API_KEY,
+                'query': model_instance.found_location,
+            }
+
+            response = requests.get(base_url, params=params)
+            data = response.json()
+
+            if 'results' in data and data['results']:
+                # Récupérer les coordonnées du premier résultat
+                coordinates = data['results'][0]['position']
+                result_entry = {
+                    'class_name': model_instance.__class__.__name__,
+                    'id': model_instance.id,
+                    'coordinates': coordinates,
+                }
+                result_data.append(result_entry)
+            else:
+                result_data.append({'class_name': model_instance.__class__.__name__, 'id': model_instance.id, 'coordinates': None})
+
+        return JsonResponse({'data': result_data})
+
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=400)
+

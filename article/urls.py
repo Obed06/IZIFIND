@@ -24,4 +24,8 @@ urlpatterns = [
 
     path('individuals/', IndividualViewSet.as_view({'get': 'list', 'post': 'create'}), name='individual-list'),
     path('individuals/<int:pk>/', IndividualViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='individual-detail'),
+
+    path('location/<int:id>/', location_view, name='location-view'),
 ]
+
+location_view
