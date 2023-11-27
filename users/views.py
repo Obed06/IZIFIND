@@ -132,3 +132,4 @@ def reset_password_confirm(request, uidb64, token):
 	else:
 		messages.error(request, 'Ce lien de réinitialisation de mot de passe est invalide.')
 		return redirect('login')
+

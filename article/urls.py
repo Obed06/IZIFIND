@@ -27,4 +27,3 @@ urlpatterns = [
 
     path('location/<int:id>/', location_view, name='location-view'),
 ]
-
