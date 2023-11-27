@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm
 
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.generics import CreateAPIView
@@ -28,6 +29,35 @@ class RegisterUserView(CreateAPIView):
 	queryset = get_user_model().objects.all()
 	permission_classes = (AllowAny,)
 	serializer_class = RegisterUserSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = get_user_model().objects.all()
+    serializer_class = RegisterUserSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        user_instance = self.get_object()
+        serializer = self.get_serializer(user_instance)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        user_instance = self.get_object()
+        serializer = self.get_serializer(user_instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def delete_user(request, user_id):
+    try:
+        user = get_user_model().objects.get(pk=user_id)
+        user.delete()
+        return Response({'message': f'User with ID {user_id} has been deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+    except get_user_model().DoesNotExist:
+        return Response({'message': f'User with ID {user_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
