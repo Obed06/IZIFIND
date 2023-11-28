@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm
+from django.conf import settings
 
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -18,8 +19,11 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import ValidationError as DRFValidationError
 
-from .serializers import RegisterUserSerializer, SMSSerializer, MessageSerializer
-from .models import User, Message
+from twilio.rest import Client
+import requests
+
+from .serializers import *
+from .models import *
 
 
 
@@ -45,38 +49,6 @@ class UserViewSet(viewsets.ModelViewSet):
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response(serializer.data)
-
-
-	@action(detail=True, methods=['post'], serializer_class=SMSSerializer)
-	def send_sms(self, request, pk=None):
-		serializer = SMSSerializer(data=request.data)
-		if serializer.is_valid():
-			user = self.get_object()
-			phone_number = serializer.validated_data['phone_number']
-			message = serializer.validated_data['message']
-
-			try:
-				# Configurer le client Twilio avec les variables d'environnement
-				account_sid = settings.TWILIO_ACCOUNT_SID
-				auth_token = settings.TWILIO_AUTH_TOKEN
-				twilio_phone_number = settings.TWILIO_PHONE_NUMBER
-				client = Client(account_sid, auth_token)
-
-				# Envoyer le SMS avec Twilio
-				twilio_message = client.messages.create(
-					body=message,
-					from_=twilio_phone_number,
-					to=phone_number
-				)
-
-				if twilio_message.sid:
-					return Response({'success': True, 'message': 'SMS envoyé avec succès'}, status=status.HTTP_200_OK)
-				else:
-					return Response({'success': False, 'message': 'Échec de l\'envoi du SMS'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-			except Exception as e:
-				return Response({'success': False, 'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MessageViewSet(viewsets.ModelViewSet):

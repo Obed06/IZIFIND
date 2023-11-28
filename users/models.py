@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
-from twilio.rest import Client
-from django.conf import settings
 
 
 
@@ -23,6 +21,7 @@ class CustomUserManager(BaseUserManager):
 		user = self.create_user(email, password=password, **extra_fields)
 		user.is_staff = True
 		user.is_superuser = True
+		user.is_admin = True
 		user.save(using=self._db)
 		return user
 
@@ -33,6 +32,8 @@ class User(AbstractUser, PermissionsMixin):
 	first_name = models.CharField(max_length=25)
 	last_name = models.CharField(max_length=25)
 	password = models.CharField(max_length=128)
+
+	phone_number = models.CharField(max_length=15, blank=True, null=True)
 
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)

@@ -3,12 +3,10 @@ from .views import *
 
 urlpatterns = [
 	path('users/', UserViewSet.as_view({'get': 'list', 'post': 'create'}), name='user-list'),
-
+	path('register/', RegisterUserView.as_view(), name='register'),
+	
     path('users/<int:pk>/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='user-detail'),
     path('api/delete-user/<int:user_id>/', delete_user, name='delete_user'),
-
-    path('users/<int:pk>/send-sms/', UserViewSet.as_view({'post': 'send_sms'}), name='user-send-sms'),
-	path('register/', RegisterUserView.as_view(), name='register'),
 
 	path('login/', login_view, name='login'),
 	path('reset_password_email/', reset_password_email, name='reset_password_email'),
