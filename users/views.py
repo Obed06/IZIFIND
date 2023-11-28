@@ -11,16 +11,15 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm
 
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework import status
 from rest_framework.exceptions import ValidationError as DRFValidationError
 
-from .serializers import RegisterUserSerializer
-from .models import User
+from .serializers import RegisterUserSerializer, SMSSerializer, MessageSerializer
+from .models import User, Message
 
 
 
@@ -32,32 +31,92 @@ class RegisterUserView(CreateAPIView):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = get_user_model().objects.all()
-    serializer_class = RegisterUserSerializer
+	queryset = get_user_model().objects.all()
+	serializer_class = RegisterUserSerializer
 
-    def retrieve(self, request, *args, **kwargs):
-        user_instance = self.get_object()
-        serializer = self.get_serializer(user_instance)
-        return Response(serializer.data)
+	def retrieve(self, request, *args, **kwargs):
+		user_instance = self.get_object()
+		serializer = self.get_serializer(user_instance)
+		return Response(serializer.data)
 
-    def update(self, request, *args, **kwargs):
-        user_instance = self.get_object()
-        serializer = self.get_serializer(user_instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+	def update(self, request, *args, **kwargs):
+		user_instance = self.get_object()
+		serializer = self.get_serializer(user_instance, data=request.data, partial=True)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+
+	@action(detail=True, methods=['post'], serializer_class=SMSSerializer)
+	def send_sms(self, request, pk=None):
+		serializer = SMSSerializer(data=request.data)
+		if serializer.is_valid():
+			user = self.get_object()
+			phone_number = serializer.validated_data['phone_number']
+			message = serializer.validated_data['message']
+
+			try:
+				# Configurer le client Twilio avec les variables d'environnement
+				account_sid = settings.TWILIO_ACCOUNT_SID
+				auth_token = settings.TWILIO_AUTH_TOKEN
+				twilio_phone_number = settings.TWILIO_PHONE_NUMBER
+				client = Client(account_sid, auth_token)
+
+				# Envoyer le SMS avec Twilio
+				twilio_message = client.messages.create(
+					body=message,
+					from_=twilio_phone_number,
+					to=phone_number
+				)
+
+				if twilio_message.sid:
+					return Response({'success': True, 'message': 'SMS envoyé avec succès'}, status=status.HTTP_200_OK)
+				else:
+					return Response({'success': False, 'message': 'Échec de l\'envoi du SMS'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+			except Exception as e:
+				return Response({'success': False, 'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		else:
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MessageViewSet(viewsets.ModelViewSet):
+	queryset = Message.objects.all()
+	serializer_class = MessageSerializer
+
+	@action(detail=False, methods=['get'])
+	def inbox(self, request):
+		# Récupérer la boîte de réception de l'utilisateur connecté
+		user = self.request.user
+		messages = Message.objects.filter(receiver=user)
+		serializer = MessageSerializer(messages, many=True)
+		return Response(serializer.data)
+
+	@action(detail=True, methods=['post'])
+	def send_message(self, request, pk=None):
+		# Envoyer un message à un utilisateur spécifique
+		sender = self.request.user
+		receiver = self.get_object().receiver
+		content = request.data.get('content', '')
+
+		if content:
+			Message.objects.create(sender=sender, receiver=receiver, content=content)
+			return Response({'success': True, 'message': 'Message envoyé avec succès'}, status=status.HTTP_200_OK)
+		else:
+			return Response({'success': False, 'message': 'Le contenu du message ne peut pas être vide'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['DELETE'])
 def delete_user(request, user_id):
-    try:
-        user = get_user_model().objects.get(pk=user_id)
-        user.delete()
-        return Response({'message': f'User with ID {user_id} has been deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
-    except get_user_model().DoesNotExist:
-        return Response({'message': f'User with ID {user_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+	try:
+		user = get_user_model().objects.get(pk=user_id)
+		user.delete()
+		return Response({'message': f'User with ID {user_id} has been deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+	except get_user_model().DoesNotExist:
+		return Response({'message': f'User with ID {user_id} does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+	except Exception as e:
+		return Response({'message': f'An error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['POST'])
