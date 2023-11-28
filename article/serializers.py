@@ -1,7 +1,13 @@
 from rest_framework import serializers
-from .models import Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
+from .models import Item, Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
 
 
+
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = '__all__'
 
 
 class CarSerializer(serializers.ModelSerializer):

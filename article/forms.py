@@ -1,7 +1,13 @@
 from django import forms
-from .models import Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
+from .models import Item, Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
 
 
+
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = '__all__'
 
 
 class CarForm(forms.ModelForm):

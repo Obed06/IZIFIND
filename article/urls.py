@@ -26,4 +26,10 @@ urlpatterns = [
     path('individuals/<int:pk>/', IndividualViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='individual-detail'),
 
     path('location/<int:id>/', location_view, name='location-view'),
+
+    path('api/items/', ItemViewSet.as_view({'get': 'list', 'post': 'create'}), name='item-list'),
+    path('api/items/<int:pk>/', ItemViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='item-detail'),
+    path('api/items/alphabetical-sort/', ItemViewSet.as_view({'get': 'alphabetical_sort'}), name='item-alphabetical-sort'),
+    path('api/items/search/', ItemViewSet.as_view({'get': 'search'}), name='item-search'),
+   
 ]

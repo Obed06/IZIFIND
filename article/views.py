@@ -3,31 +3,67 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
+from django.db.models import Q
+
 import requests
 from decouple import config
 
-from .models import Car, Motorcycle, Key, USBKey, MobilePhone, Animal, Individual
-from .serializers import (
-    CarSerializer,
-    MotorcycleSerializer,
-    KeySerializer,
-    USBKeySerializer,
-    MobilePhoneSerializer,
-    AnimalSerializer,
-    IndividualSerializer,
-)
-from .forms import (
-    CarForm,
-    MotorcycleForm,
-    KeyForm,
-    USBKeyForm,
-    MobilePhoneForm,
-    AnimalForm,
-    IndividualForm,
-)
+from .models import *
+from .serializers import *
+from .forms import *
 
 
+
+class ItemViewSet(viewsets.ModelViewSet):
+    serializer_class = ItemSerializer
+    queryset = Item.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        # Logique pour la liste par défaut, si nécessaire
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        # Logique pour la création d'un nouvel élément, si nécessaire
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=201)
+
+    def retrieve(self, request, *args, **kwargs):
+        # Logique pour la récupération d'un élément spécifique, si nécessaire
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        # Logique pour la mise à jour d'un élément, si nécessaire
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        # Logique pour la suppression d'un élément, si nécessaire
+        instance = self.get_object()
+        instance.delete()
+        return Response(status=204)
+
+    @action(detail=False, methods=['get'])
+    def alphabetical_sort(self, request):
+        items = Item.objects.all().order_by('name')
+        serializer = self.get_serializer(items, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def search(self, request):
+        search_query = request.query_params.get('search', '')
+        items = Item.objects.filter(Q(name__icontains=search_query))
+        serializer = self.get_serializer(items, many=True)
+        return Response(serializer.data)
 
 
 class CarViewSet(viewsets.ModelViewSet):
