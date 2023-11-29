@@ -17,7 +17,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = get_user_model()
-		fields = ('email', 'password', 'first_name', 'last_name', 'phone_number')
+		fields = ('email', 'password', 'first_name', 'last_name')
 		extra_kwargs = {
 			'password': {'write_only': True, 'min_length': 8},
 			'first_name': {'required': True},
@@ -29,18 +29,12 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 		user = self.Meta.model.objects.create(
 			email = validated_data['email'],
 			first_name = validated_data['first_name'],
-			last_name = validated_data['last_name'],
-			phone_number=validated_data.get('phone_number')
+			last_name = validated_data['last_name']
 		)
 
 		user.set_password(validated_data['password'])
 		user.save()
 		return user
-
-
-class SMSSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(max_length=15)
-    message = serializers.CharField(max_length=160)
 
 
 class MessageSerializer(serializers.ModelSerializer):

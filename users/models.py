@@ -33,8 +33,6 @@ class User(AbstractUser, PermissionsMixin):
 	last_name = models.CharField(max_length=25)
 	password = models.CharField(max_length=128)
 
-	phone_number = models.CharField(max_length=15, blank=True, null=True)
-
 	is_active = models.BooleanField(default=True)
 	is_admin = models.BooleanField(default=False)
 	is_staff = models.BooleanField(default=False)
@@ -53,12 +51,6 @@ class User(AbstractUser, PermissionsMixin):
 
 	def has_module_perms(self, app_label):
 		return True
-
-	def send_sms(self, phone_number, message):
-		if self.phone_number:
-			send_sms(self.phone_number, message)
-		else:
-			raise ValueError("Le numéro de téléphone de l'utilisateur n'est pas défini.")
 
 
 class Message(models.Model):
