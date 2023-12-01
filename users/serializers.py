@@ -42,3 +42,7 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ['sender', 'receiver', 'content', 'timestamp', 'is_read']
 
+
+class SendNotificationSerializer(serializers.Serializer):
+    subject = serializers.CharField(max_length=255, required=True)
+    message = serializers.CharField(required=True, style={"input_type": "textarea"})

@@ -39,7 +39,7 @@ urlpatterns = [
     path('individuals/alphabetical-sort/', IndividualViewSet.as_view({'get': 'alphabetical_sort'}), name='individual-alphabetical-sort'),
     path('individuals/search/', IndividualViewSet.as_view({'get': 'search'}), name='individual-search'),
 
-#    path('location/<int:id>/', location_view, name='location-view'),
+    path('location/<int:id>/', location_view, name='location-view'),
 
     path('items/', ItemViewSet.as_view({'get': 'list', 'post': 'create'}), name='item-list'),
     path('items/<int:pk>/', ItemViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='item-detail'),

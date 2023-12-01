@@ -18,8 +18,8 @@ from rest_framework.decorators import api_view, action
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import ValidationError as DRFValidationError
+from rest_framework.views import APIView
 
-from twilio.rest import Client
 import requests
 
 from .serializers import *
@@ -75,6 +75,40 @@ class MessageViewSet(viewsets.ModelViewSet):
 			return Response({'success': True, 'message': 'Message envoyé avec succès'}, status=status.HTTP_200_OK)
 		else:
 			return Response({'success': False, 'message': 'Le contenu du message ne peut pas être vide'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SendNotificationViewSet(viewsets.GenericViewSet):
+    permission_classes = (AllowAny,)
+    serializer_class = SendNotificationSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+
+            subject = serializer.validated_data.get('subject', 'Sujet de la notification')
+            message = serializer.validated_data.get('message', 'Corps du message de la notification')
+
+            from_email = settings.EMAIL_FROM
+
+            # Récupérer la liste de tous les utilisateurs
+            all_users = get_user_model().objects.all()
+
+            # Envoyer la notification à chaque utilisateur
+            for user in all_users:
+                email_subject = f'Notification: {subject}'
+                email_message = f'Bonjour {user.email},\n\n{message}'
+
+                send_mail(email_subject, email_message, from_email, [user.email], fail_silently=False)
+
+            return Response({'message': 'Notifications envoyées avec succès à tous les utilisateurs.'}, status=status.HTTP_200_OK)
+
+        except (DjangoValidationError, DRFValidationError) as e:
+            return Response({'message': 'Erreur lors de la validation des données.', 'errors': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+        except BadHeaderError:
+            return Response({'message': 'Erreur lors de l\'envoi de l\'e-mail.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({'message': f'Erreur inattendue: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
