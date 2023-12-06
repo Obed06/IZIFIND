@@ -33,6 +33,13 @@ class RegisterUserView(CreateAPIView):
 	permission_classes = (AllowAny,)
 	serializer_class = RegisterUserSerializer
 
+	def perform_create(self, serializer):
+		user = serializer.save()
+
+	def create(self, request, *args, **kwargs):
+		response = super().create(request, *args, **kwargs)
+		return redirect('page_login', *args, permanent=False, **kwargs)
+
 
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = get_user_model().objects.all()
@@ -78,37 +85,37 @@ class MessageViewSet(viewsets.ModelViewSet):
 
 
 class SendNotificationViewSet(viewsets.GenericViewSet):
-    permission_classes = (AllowAny,)
-    serializer_class = SendNotificationSerializer
+	permission_classes = (AllowAny,)
+	serializer_class = SendNotificationSerializer
 
-    def create(self, request, *args, **kwargs):
-        try:
-            serializer = self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
+	def create(self, request, *args, **kwargs):
+		try:
+			serializer = self.get_serializer(data=request.data)
+			serializer.is_valid(raise_exception=True)
 
-            subject = serializer.validated_data.get('subject', 'Sujet de la notification')
-            message = serializer.validated_data.get('message', 'Corps du message de la notification')
+			subject = serializer.validated_data.get('subject', 'Sujet de la notification')
+			message = serializer.validated_data.get('message', 'Corps du message de la notification')
 
-            from_email = settings.EMAIL_FROM
+			from_email = settings.EMAIL_FROM
 
-            # Récupérer la liste de tous les utilisateurs
-            all_users = get_user_model().objects.all()
+			# Récupérer la liste de tous les utilisateurs
+			all_users = get_user_model().objects.all()
 
-            # Envoyer la notification à chaque utilisateur
-            for user in all_users:
-                email_subject = f'Notification: {subject}'
-                email_message = f'Bonjour {user.email},\n\n{message}'
+			# Envoyer la notification à chaque utilisateur
+			for user in all_users:
+				email_subject = f'Notification: {subject}'
+				email_message = f'Bonjour {user.email},\n\n{message}'
 
-                send_mail(email_subject, email_message, from_email, [user.email], fail_silently=False)
+				send_mail(email_subject, email_message, from_email, [user.email], fail_silently=False)
 
-            return Response({'message': 'Notifications envoyées avec succès à tous les utilisateurs.'}, status=status.HTTP_200_OK)
+			return Response({'message': 'Notifications envoyées avec succès à tous les utilisateurs.'}, status=status.HTTP_200_OK)
 
-        except (DjangoValidationError, DRFValidationError) as e:
-            return Response({'message': 'Erreur lors de la validation des données.', 'errors': e.detail}, status=status.HTTP_400_BAD_REQUEST)
-        except BadHeaderError:
-            return Response({'message': 'Erreur lors de l\'envoi de l\'e-mail.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except Exception as e:
-            return Response({'message': f'Erreur inattendue: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		except (DjangoValidationError, DRFValidationError) as e:
+			return Response({'message': 'Erreur lors de la validation des données.', 'errors': e.detail}, status=status.HTTP_400_BAD_REQUEST)
+		except BadHeaderError:
+			return Response({'message': 'Erreur lors de l\'envoi de l\'e-mail.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		except Exception as e:
+			return Response({'message': f'Erreur inattendue: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -135,9 +142,9 @@ def login_view(request):
 
 		if user is not None:
 			login(request, user)
-			return Response({'message': "Connexion réussie."}, status=status.HTTP_200_OK)
+			return redirect('home')
 		else:
-			return Response({'message': "Identifiant ou mot de passe incorrect."}, status=status.HTTP_401_UNAUTHORIZED)
+			return render(request, 'users/login.html', {'error_message': "Identifiant ou mot de passe incorrect."})
 
 
 @api_view(['POST'])
@@ -193,8 +200,23 @@ def reset_password_confirm(request, uidb64, token):
 		else:
 			form = SetPasswordForm(user)
 
-		return render(request, 'reset_password_confirm.html', {'form': form})
+		return render(request, 'users/reset_password_confirm.html', {'form': form})
 	else:
 		messages.error(request, 'Ce lien de réinitialisation de mot de passe est invalide.')
 		return redirect('login')
 
+
+def page_register(request):
+	return render(request, 'users/register.html')
+
+
+def page_login(request):
+	return render(request, 'users/login.html')
+
+
+def page_password_email(request):
+	return render(request, 'users/reset_password_email.html')
+
+
+def home(request):
+	return render(request, 'users/home.html')

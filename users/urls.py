@@ -18,4 +18,10 @@ urlpatterns = [
     path('messages/<int:pk>/send_message/', MessageViewSet.as_view({'post': 'send_message'}), name='message-send'),
 
     path('send-notification/', SendNotificationViewSet.as_view({'post': 'create'}), name='send-notification'),
+
+    ############    LES PAGES    ############
+    path('page_register/', page_register, name='page_register'),
+    path('page_login/', page_login, name='page_login'),
+    path('page_password_email/', page_password_email, name='page_password_email'),
+    path('home/', home, name='home'),
 ]

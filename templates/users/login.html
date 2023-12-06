@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+	<div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Connexion</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Votre email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Mot de passe</label>
+                                <input type="password" name="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Se Connecter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            var errorMessage = "{{ error_message }}";
+            if (errorMessage) {
+                alert(errorMessage);
+            }
+        };
+    </script>
+
+{% endblock %}
+
