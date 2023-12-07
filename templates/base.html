@@ -11,43 +11,37 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light py-3 mb-5" id="mainNav">
-        <div class="container px-4 px-lg-5">
-            <h4 class="fw-bold" id="titre">IZIFIND</h4>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ms-auto my-2 my-lg-0">
-                    <li class="nav-item">
-                    	<a class="nav-link" style="color:black;" href="{% url 'home' %}">Accueil</a>
-                    </li>
+	<ul class="nav justify-content-center align-items-center">
+			<li class="nav-item">
+				<a class="nav-link fs-4 fw-bold" href="{% url 'home' %}">IZIFIND</a>
+			</li>
+	  	<li class="nav-item">
+	    	<a class="nav-link fs-4" href="{% url 'page_register' %}">S'inscrire</a>
+	  	</li>
+	  	<li class="nav-item">
+	    	<a class="nav-link fs-4" href="{% url 'page_login' %}">Se Connecter</a>
+	  	</li>
+	</ul>
+	<hr class="border border-5 border-info" style="width:100%;">
 
-                    <li class="nav-item">
-                    	<a class="nav-link"  style="color:black;" href="{% url 'page_register' %}">S'inscrire</a>
-                    </li>
-
-                    <li class="nav-item">
-                    	<a class="nav-link"  style="color:black;" href="{% url 'page_login' %}">Se Connecter</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-3" style="">
-        {% block content %}
-        {% endblock %}
-    </div>
-
-    <script type="text/javascript" src="{% static 'bootstrap.bundle.min.js' %}"></script>
-
-    <style type="text/css">
-    	html,body{
-    		margin: 0px;
-    		padding: 0px;
+	<style type="text/css">
+    	html, body{
+    		font-size: 16px;
     	}
-    	#titre{
-    		color:#28f;
+    	.nav-link{
+    		color: #0ac;
+    	}
+    	.nav-link:hover{
+    		background-color: #0ac;
+    		color: #fff;
     	}
     </style>
+
+	<div class="row">
+		{% block content %}
+		{% endblock %}
+	</div>
+
+    <script type="text/javascript" src="{% static 'bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

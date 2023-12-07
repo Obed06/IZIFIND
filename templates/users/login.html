@@ -1,32 +1,59 @@
 {% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Page de connexion{% endblock %}
+
 {% block content %}
-	<div class="container mt-5">
+    <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-xs-8 col-sm-8 col-md-6 col-lg-5 col-xl-5 col-xxl-4">
+
                 <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Connexion</h4>
+                    <div class="card-header text-white common-header" style="background-color:#0ac;">
+                        <h2 class="mb-3">Connexion</h2>
                     </div>
+
                     <div class="card-body">
                         <form method="post" action="{% url 'login' %}">
                             {% csrf_token %}
+
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" name="email" class="form-control" id="email" placeholder="Votre email" required>
+                                <input type="email" name="email" class="form-control" id="email" placeholder="Votre email" required autocomplete="email">
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Mot de passe</label>
-                                <input type="password" name="password" class="form-control" id="password" placeholder="Votre mot de passe" required>
+								<label for="password" class="form-label">Mot de passe :</label>
+								<div class="input-group">
+									<input type="password" class="form-control" id="password" name="password" placeholder="Votre mot de passe">
+								</div>
                             </div>
                             
-                            <button type="submit" class="btn btn-primary">Se Connecter</button>
+                            <button type="submit" class="btn common-btn">Se Connecter</button>
                         </form>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+
+    <style type="text/css">
+        .common-header {
+            font-size: 18px;
+        }
+
+        .common-btn {
+            background-color: #0ac;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .common-btn:hover {
+            color: #fff;
+        }
+    </style>
 
     <script>
         window.onload = function() {
@@ -35,7 +62,6 @@
                 alert(errorMessage);
             }
         };
+
     </script>
-
 {% endblock %}
-
