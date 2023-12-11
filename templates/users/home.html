@@ -5,11 +5,92 @@
 {% load static %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
-    <div class="col-xs-8 col-sm-8 col-md-6 col-lg-5 col-xl-5 col-xxl-4 text-center">
-        <div class="alert alert-warning" role="alert" style="width: 500px; font-size: 30px;">
-            Pour des raisons diverses et spécifiques, cette page est inaccessible pour l'instant. Nous vous présentons nos sincères excuses!
+    <div class="d-flex justify-content-center align-items-center" style="margin:10vh; height:80vh;">
+        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-xl-8 col-xxl-6">
+
+            <div id="carouselExampleFade" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" style="max-width:100%;">
+
+                    <div class="carousel-item active">
+                        <p class="text-break col-9" style="font-size:3.4rem;"><strong>izifind :</strong> Votre outil de recherche intuitif pour un monde sans objets perdus.</p>
+                    </div>
+	    			<div class="carousel-item">
+	      				<p class="text-break col-9" style="font-size:3.4rem;"><strong>izifind,</strong> là où la recherche devient un jeu d'enfant – retrouvez vos objets et vos proches en un clin d'œil.</p>
+	    			</div>
+	    			
+	    			<div class="carousel-item">
+						<p class="text-break col-9" style="font-size:3.4rem;">Explorez, trouvez, récupérez : <strong>izifind</strong> simplifie la recherche comme jamais auparavant.</p>
+	    			</div>
+	    			<div class="carousel-item">
+						<p class="text-break col-9" style="font-size:3.4rem;"><strong>izifind :</strong> Parce que retrouver ce qui compte devrait être aussi simple que quelques clics.</p>
+	    			</div>
+
+	    			<div class="carousel-item">
+						<p class="text-break col-9" style="font-size:3.4rem;"><strong>izifind,</strong> votre guide de recherche qui transforme l'impossible en possible.</p>
+	    			</div>
+	    			<div class="carousel-item">
+						<p class="text-break col-9" style="font-size:3.4rem;"><strong>izifind :</strong> Votre complice dans la recherche de l'irremplaçable.</p>
+	    			</div>
+
+	    			<div class="carousel-item">
+						<p class="text-break col-9" style="font-size:3.4rem;">Retrouver vos objets et vos proches n'a jamais été aussi simple – <strong>izifind</strong> vous montre le chemin.</p>
+	    			</div>
+	    			<div class="carousel-item">
+						<p class="text-break col-9" style="font-size:3.4rem;"><strong>izifind :</strong> la quête devient une aventure, et la recherche se transforme en retrouvailles</p>
+	    			</div>
+
+                </div>
+
+                <div class="d-flex justify-content-center mt-3">
+	                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+	                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	                    <span class="visually-hidden">Previous</span>
+	                </button>
+
+	                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+	                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+	                    <span class="visually-hidden">Next</span>
+	                </button>
+                </div>
+            </div>
+
+            <div class="container mt-3">
+                <a href="{% url 'page_register' %}">
+                    <button type="button" class="btn btn-primary btn-lg px-4">
+                        S'inscrire
+                    </button>
+                </a>
+                <a href="{% url 'page_login' %}">
+                    <button type="button" class="btn btn-success btn-lg px-4">
+                        Se Connecter
+                    </button>
+                </a>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="d-block" style="height:50vh; background-color:whitesmoke;"></div>
+
+    <div class="col-12 text-white" style="">
+        <h2 class="" style="font-size:3rem;">Comment ça marche ?</h2>
+        <p>
+        	<ol>
+        		<li class="text-decoration-underline fs-4" style="color:#f55">Inscrivez-vous</li>
+        		<p class="col-6" style="font-size: 1.5rem;">Vous pouvez le faire en cliquant sur n'importe quel bouton où c'est écris <strong>"S'inscrire"</strong>. Après, il vous suffit de remplir le formulaire d'inscription en respectant les consignes.</p>
+
+        		<li class="text-decoration-underline fs-4" style="color:#f55">Inscrivez-vous</li>
+        		<p class="col-6" style="font-size: 1.5rem;">Vous pouvez le faire en cliquant sur n'importe quel bouton où c'est écris <strong>"S'inscrire"</strong>. Après, il vous suffit de remplir le formulaire d'inscription en respectant les consignes.</p>
+
+        		<li class="text-decoration-underline fs-4" style="color:#f55">Inscrivez-vous</li>
+        		<p class="col-6" style="font-size: 1.5rem;">Vous pouvez le faire en cliquant sur n'importe quel bouton où c'est écris <strong>"S'inscrire"</strong>. Après, il vous suffit de remplir le formulaire d'inscription en respectant les consignes.</p>
+
+        		<li class="text-decoration-underline fs-4" style="color:#f55">Inscrivez-vous</li>
+        		<p class="col-6" style="font-size: 1.5rem;">Vous pouvez le faire en cliquant sur n'importe quel bouton où c'est écris <strong>"S'inscrire"</strong>. Après, il vous suffit de remplir le formulaire d'inscription en respectant les consignes.</p>
+        	</ol>
+        </p>
+    </div>
+
+    <style type="text/css">
+    </style>
 {% endblock %}
+

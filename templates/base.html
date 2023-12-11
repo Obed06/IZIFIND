@@ -11,36 +11,61 @@
     <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
 </head>
 <body>
-	<ul class="nav justify-content-center align-items-center">
-			<li class="nav-item">
-				<a class="nav-link fs-4 fw-bold" href="{% url 'home' %}">IZIFIND</a>
+
+	<header class="mt-2">
+		<ul class="nav justify-content-center">
+			<li class="nav-item mx-3">
+				<a class="nav-link fs-4 btn btn-light text-black" style="" href="{% url 'home' %}">Accueil</a>
 			</li>
-	  	<li class="nav-item">
-	    	<a class="nav-link fs-4" href="{% url 'page_register' %}">S'inscrire</a>
-	  	</li>
-	  	<li class="nav-item">
-	    	<a class="nav-link fs-4" href="{% url 'page_login' %}">Se Connecter</a>
-	  	</li>
-	</ul>
-	<hr class="border border-5 border-info" style="width:100%;">
+		  	
+		  	<li class="nav-item mx-3">
+		    	<a class="nav-link fs-4 btn btn-primary text-white" style="" href="{% url 'page_register' %}">S'inscrire</a>
+		  	</li>
+		  	
+		  	<li class="nav-item mx-3">
+		    	<a class="nav-link fs-4 btn btn-success text-white" style="" href="{% url 'page_login' %}">Se Connecter</a>
+		  	</li>
+		</ul>
+		<hr class="" style="border: solid #999 5px;">
+	</header>
+
+	<main>
+	    <div class="container">
+			<div class="row">
+				{% block content %}
+				{% endblock %}
+			</div>
+    	</div>
+	</main>
+
+	<footer class="container py-3 my-4">
+    	<ul class="nav justify-content-center border-bottom pb-3 mb-3">
+			<li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-1 text-muted">Accueil</a></li>
+			<li class="nav-item"><a href="{% url 'page_register' %}" class="nav-link px-1 text-muted">S'inscrire</a></li>
+			<li class="nav-item"><a href="{% url 'page_login' %}" class="nav-link px-1 text-muted">Se Connecter</a></li>
+    	</ul>
+    	<p class="float-end">
+    		<a href="#" class="text-decoration-none text-white">Retour en haut</a>
+    	</p>
+    	<p class="text-center">
+    		&copy; 2023 Copyright, IZIFIND. Tous droits résevés.
+    	</p> 
+	</footer>
 
 	<style type="text/css">
     	html, body{
-    		font-size: 16px;
+    		margin: 0%;
+    		padding: 0%;
+    		font-size: 11px;
     	}
-    	.nav-link{
-    		color: #0ac;
-    	}
-    	.nav-link:hover{
-    		background-color: #0ac;
-    		color: #fff;
-    	}
-    </style>
 
-	<div class="row">
-		{% block content %}
-		{% endblock %}
-	</div>
+    	body {
+		    background-image: url("{% static '11.jpg' %}");
+		    background-attachment: fixed;
+		    background-repeat: no-repeat;
+		    background-size: cover;
+		}
+    </style>
 
     <script type="text/javascript" src="{% static 'bootstrap.bundle.min.js' %}"></script>
 </body>
