@@ -62,14 +62,6 @@ class MessageViewSet(viewsets.ModelViewSet):
 	queryset = Message.objects.all()
 	serializer_class = MessageSerializer
 
-	@action(detail=False, methods=['get'])
-	def inbox(self, request):
-		# Récupérer la boîte de réception de l'utilisateur connecté
-		user = self.request.user
-		messages = Message.objects.filter(receiver=user)
-		serializer = MessageSerializer(messages, many=True)
-		return Response(serializer.data)
-
 	@action(detail=True, methods=['post'])
 	def send_message(self, request, pk=None):
 		# Envoyer un message à un utilisateur spécifique
@@ -82,6 +74,18 @@ class MessageViewSet(viewsets.ModelViewSet):
 			return Response({'success': True, 'message': 'Message envoyé avec succès'}, status=status.HTTP_200_OK)
 		else:
 			return Response({'success': False, 'message': 'Le contenu du message ne peut pas être vide'}, status=status.HTTP_400_BAD_REQUEST)
+
+	@action(detail=True, methods=['post'])
+	def mark_as_read(self, request, pk=None):
+		message = self.get_object()
+		
+		if message.receiver == self.request.user:
+			message.is_read = True
+			message.save()
+			
+			return Response({'success': True, 'message': 'Message marqué comme lu avec succès'}, status=status.HTTP_200_OK)
+		else:
+			return Response({'success': False, 'message': 'Vous n\'êtes pas autorisé à marquer ce message comme lu'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class SendNotificationViewSet(viewsets.GenericViewSet):
