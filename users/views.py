@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import SetPasswordForm
 from django.conf import settings
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, action
 from rest_framework.generics import CreateAPIView
@@ -74,6 +74,8 @@ class MessageViewSet(viewsets.ModelViewSet):
 			return Response({'success': True, 'message': 'Message envoyé avec succès'}, status=status.HTTP_200_OK)
 		else:
 			return Response({'success': False, 'message': 'Le contenu du message ne peut pas être vide'}, status=status.HTTP_400_BAD_REQUEST)
+
+	permission_classes = [permissions.AllowAny]
 
 	@action(detail=True, methods=['post'])
 	def mark_as_read(self, request, pk=None):
