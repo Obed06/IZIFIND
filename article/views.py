@@ -52,19 +52,6 @@ class ItemViewSet(viewsets.ModelViewSet):
         instance.delete()
         return Response(status=204)
 
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        items = Item.objects.all().order_by('name')
-        serializer = self.get_serializer(items, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        items = Item.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(items, many=True)
-        return Response(serializer.data)
-
 
 class CarViewSet(viewsets.ModelViewSet):
     queryset = Car.objects.all()
@@ -98,19 +85,6 @@ class CarViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        cars = Car.objects.all().order_by('name')
-        serializer = self.get_serializer(cars, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        cars = Car.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(cars, many=True)
-        return Response(serializer.data)
-
 
 class MotorcycleViewSet(viewsets.ModelViewSet):
     queryset = Motorcycle.objects.all()
@@ -142,19 +116,6 @@ class MotorcycleViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        motorcycles = Motorcycle.objects.all().order_by('name')
-        serializer = self.get_serializer(motorcycles, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        motorcycles = Motorcycle.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(motorcycles, many=True)
-        return Response(serializer.data)
 
 
 class KeyViewSet(viewsets.ModelViewSet):
@@ -188,19 +149,6 @@ class KeyViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        keys = Key.objects.all().order_by('name')
-        serializer = self.get_serializer(keys, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        keys = Key.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(keys, many=True)
-        return Response(serializer.data)
-
 
 class USBKeyViewSet(viewsets.ModelViewSet):
     queryset = USBKey.objects.all()
@@ -233,19 +181,6 @@ class USBKeyViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        usbkeys = USBKey.objects.all().order_by('name')
-        serializer = self.get_serializer(usbkeys, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        usbkeys = USBKey.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(usbkeys, many=True)
-        return Response(serializer.data)
-
 
 class MobilePhoneViewSet(viewsets.ModelViewSet):
     queryset = MobilePhone.objects.all()
@@ -277,19 +212,6 @@ class MobilePhoneViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        mobilephones = MobilePhone.objects.all().order_by('name')
-        serializer = self.get_serializer(mobilephones, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        mobilephones = MobilePhone.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(mobilephones, many=True)
-        return Response(serializer.data)
 
 
 class AnimalViewSet(viewsets.ModelViewSet):
@@ -367,19 +289,6 @@ class IndividualViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(detail=False, methods=['get'])
-    def alphabetical_sort(self, request):
-        individuals = Individual.objects.all().order_by('name')
-        serializer = self.get_serializer(individuals, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['get'])
-    def search(self, request):
-        search_query = request.query_params.get('search', '')
-        individuals = Individual.objects.filter(Q(name__icontains=search_query))
-        serializer = self.get_serializer(individuals, many=True)
-        return Response(serializer.data)
 
 
 
