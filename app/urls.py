@@ -20,11 +20,46 @@ urlpatterns = [
 
     path('send_email/', xend_email, name='send_email'),
 
+
     path('loses/', LoseViewSet.as_view({'get': 'list', 'post': 'create'}), name='lose-list'),
     path('loses/<int:pk>/', LoseViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='lose-detail'),
 
     path('find/', FindViewSet.as_view({'get': 'list', 'post': 'create'}), name='find-list'),
     path('find/<int:pk>/', FindViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='find-detail'),
+
+    path('type-categorie/', TypeCategorieViewSet.as_view({'get': 'list', 'post': 'create'}), name='type-categorie'),
+    path('type-categorie/<int:pk>/', TypeCategorieViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='type-categorie-detail'),
+
+    path('categorie/', CategorieViewSet.as_view({'get': 'list', 'post': 'create'}), name='categorie'),
+    path('categorie/<int:pk>/', CategorieViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='categorie-detail'),
+    
+    path('retrieve/', RetrieveViewSet.as_view({'get': 'list', 'post': 'create'}), name='retrieve'),
+    path('retrieve/<int:pk>/', RetrieveViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='retrieve-detail'),
+    
+    path('publish/', PublishViewSet.as_view({'get': 'list', 'post': 'create'}), name='publish'),
+    path('publish/<int:pk>/', PublishViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='publish-detail'),
+    
+    path('info/', InfoViewSet.as_view({'get': 'list', 'post': 'create'}), name='info'),
+    path('info/<int:pk>/', InfoViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='info-detail'),
+    
+    path('type-notification/', TypeNotificationViewSet.as_view({'get': 'list', 'post': 'create'}), name='type-notification'),
+    path('type-notification/<int:pk>/', TypeNotificationViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='type-notification-detail'),
+    
+    path('type-abonnement/', TypeAbonnementViewSet.as_view({'get': 'list', 'post': 'create'}), name='type-abonnement'),
+    path('type-abonnement/<int:pk>/', TypeAbonnementViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='type-abonnement-detail'),
+
+    path('temoignage/', TemoignageViewSet.as_view({'get': 'list', 'post': 'create'}), name='temoignage'),
+    path('temoignage/<int:pk>/', TemoignageViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='temoignage-detail'),
+
+    path('souscription/', SouscriptionViewSet.as_view({'get': 'list', 'post': 'create'}), name='souscription'),
+    path('souscription/<int:pk>/', SouscriptionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='souscription-detail'),
+
+    path('notification/', NotificationViewSet.as_view({'get': 'list', 'post': 'create'}), name='notification'),
+    path('notification/<int:pk>/', NotificationViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='notification-detail'),
+
+    path('payment/', PaymentViewSet.as_view({'get': 'list', 'post': 'create'}), name='payment'),
+    path('payment/<int:pk>/', PaymentViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='payment-detail'),
+
 
 
 ###################    LES PAGES    ###################

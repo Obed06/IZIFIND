@@ -5,25 +5,26 @@ from .models import *
 
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_admin', 'is_active')
+    list_display = ('id', 'email_or_phone', 'last_login_date' ,'last_modify_date', 'deactivate_date', 'first_name', 'last_name', 'is_staff', 'is_admin', 'is_active')
     list_filter = ('is_admin', 'is_active')
     list_editable = ('first_name', 'last_name')
 
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'first_name', 'last_name')}),
+        (None, {'fields': ('email_or_phone', 'password', 'first_name', 'last_name')}),
         ('Permissions', {'fields': ('is_admin', 'is_staff', 'is_active')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2')
+            'fields': ('email_or_phone', 'password1', 'password2')
         }),
     )
 
-    search_fields = ('email',)
-    ordering = ('email',)
+    search_fields = ('email_or_phone',)
+    ordering = ('email_or_phone',)
     filter_horizontal = ()
+
 
 
 admin.site.register(User, UserAdmin)
@@ -39,3 +40,4 @@ admin.site.register(Lose)
 admin.site.register(Find)
 admin.site.register(Retrieve)
 admin.site.register(Info)
+admin.site.register(Payment)

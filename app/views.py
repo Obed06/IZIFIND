@@ -29,6 +29,7 @@ from .models import *
 
 
 
+
 class RegisterUserView(CreateAPIView):
 	queryset = get_user_model().objects.all()
 	permission_classes = (AllowAny,)
@@ -102,8 +103,6 @@ class SendNotificationViewSet(viewsets.GenericViewSet):
 			return Response({'message': f'Erreur inattendue: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-
-
 @api_view(['DELETE'])
 def delete_user(request, user_id):
 	try:
@@ -118,20 +117,19 @@ def delete_user(request, user_id):
 
 @api_view(['GET', 'POST'])
 def login_view(request):
-    if request.method == 'POST':
-        email = request.data.get('email')
-        password = request.data.get('password')
+	if request.method == 'POST':
+		email_or_phone = request.data.get('email_or_phone')
+		password = request.data.get('password')
 
-        user = authenticate(request, email=email, password=password)
+		user = authenticate(request, email_or_phone=email_or_phone, password=password)
 
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            return render(request, 'authentication/authentication-login.html', {'error_message': "Identifiant ou mot de passe incorrect."})
-    else:
-        # Si la méthode est GET, renvoyer simplement le formulaire de login
-        return render(request, 'authentication/authentication-login.html')
+		if user is not None:
+			login(request, user)
+			return redirect('home')
+		else:
+			return Response({'error': 'Identifiant ou mot de passe incorrect.'}, status=400)
+	else:
+		return Response({'error': 'La méthode HTTP doit être POST.'}, status=405)
 
 
 @api_view(['POST'])
@@ -197,111 +195,485 @@ def reset_password_confirm(request, uidb64, token):
 
 @api_view(['POST'])
 def xend_email(request):
-    try:
-        # Récupérer les données du formulaire
-        nom = request.data.get('nom')
-        email = request.data.get('email')
-        message = request.data.get('message')
+	try:
+		# Récupérer les données du formulaire
+		nom = request.data.get('nom')
+		email = request.data.get('email')
+		message = request.data.get('message')
 
-        # Validation des données
-        if not nom or not email or not message:
-            raise DjangoValidationError("Tous les champs sont obligatoires.")
+		# Validation des données
+		if not nom or not email or not message:
+			raise DjangoValidationError("Tous les champs sont obligatoires.")
 
-        # Paramètres de l'e-mail
-        subject = 'Nouveau message de {}'.format(nom)
-        from_email = email
-        to_email = ['leonardovodouhe06@gmail.com']
+		# Paramètres de l'e-mail
+		subject = 'Nouveau message de {}'.format(nom)
+		from_email = email
+		to_email = ['leonardovodouhe06@gmail.com']
 
-        # Envoyer l'email
-        send_mail(
-            subject,
-            message,
-            from_email,
-            to_email,
-            fail_silently=False,
-        )
+		# Envoyer l'email
+		send_mail(
+			subject,
+			message,
+			from_email,
+			to_email,
+			fail_silently=False,
+		)
 
-        # Réponse de succès
-        #return Response({'message': 'Email envoyé avec succès.'})
-        #messages.success(request, 'Email envoyé avec succès.')
-        return redirect('home')
+		# Réponse de succès
+		#return Response({'message': 'Email envoyé avec succès.'})
+		#messages.success(request, 'Email envoyé avec succès.')
+		return redirect('home')
 
-    except DjangoValidationError as e:  # Correction ici
-        # En cas d'erreur de validation, retourner les détails de l'erreur
-        return Response({'error': str(e)}, status=400)
+	except DjangoValidationError as e:  # Correction ici
+		# En cas d'erreur de validation, retourner les détails de l'erreur
+		return Response({'error': str(e)}, status=400)
 
-    except Exception as e:
-        # En cas d'autres erreurs, retourner un message d'erreur générique
-        return Response({'error': 'Une erreur est survenue lors de l\'envoi de l\'email.'}, status=500)
+	except Exception as e:
+		# En cas d'autres erreurs, retourner un message d'erreur générique
+		return Response({'error': 'Une erreur est survenue lors de l\'envoi de l\'email.'}, status=500)
 
 
 
 class LoseViewSet(viewsets.ModelViewSet):
-    queryset = Lose.objects.all()
-    serializer_class = LoseSerializer
+	queryset = Lose.objects.all()
+	serializer_class = LoseSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=201)
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=204)
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
 
 
 class FindViewSet(viewsets.ModelViewSet):
-    queryset = Find.objects.all()
-    serializer_class = FindSerializer
+	queryset = Find.objects.all()
+	serializer_class = FindSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=201)
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(status=204)
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class TypeCategorieViewSet(viewsets.ModelViewSet):
+	queryset = TypeCategorie.objects.all()
+	serializer_class = TypeCategorieSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class CategorieViewSet(viewsets.ModelViewSet):
+	queryset = Categorie.objects.all()
+	serializer_class = CategorieSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class RetrieveViewSet(viewsets.ModelViewSet):
+	queryset = Retrieve.objects.all()
+	serializer_class = RetrieveSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class PublishViewSet(viewsets.ModelViewSet):
+	queryset = Publish.objects.all()
+	serializer_class = PublishSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class InfoViewSet(viewsets.ModelViewSet):
+	queryset = Info.objects.all()
+	serializer_class = InfoSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class TypeNotificationViewSet(viewsets.ModelViewSet):
+	queryset = TypeNotification.objects.all()
+	serializer_class = TypeNotificationSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class TypeAbonnementViewSet(viewsets.ModelViewSet):
+	queryset = TypeAbonnement.objects.all()
+	serializer_class = TypeAbonnementSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class TemoignageViewSet(viewsets.ModelViewSet):
+	queryset = Temoignage.objects.all()
+	serializer_class = TemoignageSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class SouscriptionViewSet(viewsets.ModelViewSet):
+	queryset = Souscription.objects.all()
+	serializer_class = SouscriptionSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class NotificationViewSet(viewsets.ModelViewSet):
+	queryset = Notification.objects.all()
+	serializer_class = NotificationSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
+
+
+class PaymentViewSet(viewsets.ModelViewSet):
+	queryset = Payment.objects.all()
+	serializer_class = PaymentSerializer
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.filter_queryset(self.get_queryset())
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
+
+	def retrieve(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance)
+		return Response(serializer.data)
+
+	def create(self, request, *args, **kwargs):
+		serializer = self.get_serializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data, status=201)
+
+	def update(self, request, *args, **kwargs):
+		partial = kwargs.pop('partial', False)
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=partial)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
+
+	def destroy(self, request, *args, **kwargs):
+		instance = self.get_object()
+		self.perform_destroy(instance)
+		return Response(status=204)
 
 
 
