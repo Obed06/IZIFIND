@@ -4,48 +4,229 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Connexion</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Connexion | IziFind</title>
+  <meta content="Izifind est une plateforme non seulement  valable pour les objets, elle l’est aussi pour les personnes portées disparues" name="description">
+  <meta content="objet,perdu,objet-perdu,objet-trouvé,trouve,trouver,trouvé,personne,find,lose," name="keywords">
   <link rel="shortcut icon" type="image/jpeg" href="{% static 'logos/favicon.jpeg' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'styles.min.css' %}"/>
+
+  <!-- Icon Font Stylesheet -->
+  <link href="{% static 'all.css' %}" rel="stylesheet">
+  <link href="{% static 'bootstrap-icons.min.css' %}" rel="stylesheet">
+
+  <!-- Libraries Stylesheet -->
+  <link href="{% static 'animate/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Template Stylesheet -->
+  <link href="{% static 'style.css' %}" rel="stylesheet">
 </head>
 
 <body>
+    <style>
+      #main-wrapper{
+        background-image: url('{% static '3.jpg' %}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+      }
+
+      /* Dérivé de bleu */
+      .color-0 {color: #3498db;}
+      .color-1 {color: #2980b9;}
+
+      /* Dérivé de vert */
+      .color-2 {color: #2ecc71;}
+      .color-3 {color: #27ae60;}
+      
+      /* Dérivé de vert-citron */
+      .color-4 {color: #16a085;}
+      .color-5 {color: #1abc9c;}
+
+      /* Dérivé de noir */
+      .color-6 {color: #2c3e50;}
+      .color-7 {color: #34495e;}
+      .color-8 {color: #273746;}
+      .color-9 {color: #2e4053;}
+
+      .text-secondary, .nav-item.nav-link.active.text-secondary{
+        color:#26d48c !important;
+      }
+
+      .nav-item.nav-link:hover{
+        transition-delay: .1s;
+        transition-duration: .5s;
+        color:#26d48c;
+      }
+
+
+      .text-secondary.d-none.d-xl-flex {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .text-secondary.d-none.d-xl-flex small {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marquee 8s linear infinite;
+      }
+
+      @keyframes marquee {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(-100%);
+        }
+      }
+
+      /* Boutons Principaux */
+      .btn-egare {
+        background-color: #26d48c; /* Vert */
+        color: #fff;
+      }
+
+      .btn-retrouve {
+        background-color: #0d6efd;
+        color: #fff;
+      }
+
+      .btn-egare:hover {
+        background-color: #0d6efd;
+        color: white;
+        transition-delay: .6s;
+        transition-duration: 1s;
+      }
+
+      .btn-retrouve:hover {
+        background-color: #26d48c;
+        color: white;
+        transition-delay: .6s;
+        transition-duration: 1s;
+      }
+
+      a.text-decoration-none.btn.text-white.fs-6 {
+        background-color: #26d48c;
+        color:#fff;
+        transition-delay: .2s;
+        transition-duration: .9s;
+      }
+
+      a.text-decoration-none.btn.text-white.fs-6:hover {
+        background-color: #007bff;
+        color:#fff;
+        transition-delay: 0.2s;
+        transition-duration: .9s;
+      }
+
+      #izitext, .fw-bold{
+        color: #3863d9;
+      }
+  </style>
+
+  <!-- Spinner Start -->
+    <div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+      <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+  <!-- Spinner End -->
+
+  <!-- Topbar Start -->
+  <div class="container-fluid bg-dark py-2 d-none d-md-flex">
+    <div class="container">
+      <div class="d-flex justify-content-between topbar">
+        <div class="top-info">
+          <small class="me-3 text-white-50"><a href=""><i class="bi bi-geo-alt-fill me-2 text-secondary"></i></a>{% if objet %} {{ objet.adresse }} {% endif %}</small>
+          <small class="me-3 text-white-50"><a href="mailto:contact@it-servicegroup.com"><i class="bi bi-envelope-fill me-2 text-secondary"></i></a>
+            {% if objet %} {{ objet.email }} {% endif %}
+          </small>
+        </div>
+        <div class="text-secondary d-none d-xl-flex"><small>Note : Nous vous aidons à trouver ce que vous cherchez</small></div>
+        <div class="top-link">
+          <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-facebook text-primary fs-5"></i></a>
+          <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-twitter text-primary fs-5"></i></a>
+          <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-instagram text-primary fs-5"></i></a>
+          <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="bi bi-linkedin text-primary fs-5"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Topbar End -->
+
+  <!-- Navbar Start -->
+  <div class="container-fluid bg-primary">
+    <div class="container">
+      <nav class="navbar navbar-dark navbar-expand-lg py-0">
+        <a href="{% url "home" %}" class="navbar-brand">
+          <a href="{% url "home" %}" class="text-white fw-bold d-block fs-1">Izi<span class="text-secondary">Find</span> </a>
+        </a>
+        <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+          <div class="navbar-nav ms-auto mx-xl-auto p-0">
+            <a href="{% url 'home' %}" class="nav-item nav-link active text-secondary">Accueil</a>
+            <a href="{% url 'home' %}#service" class="nav-item nav-link">Services</a>
+            <a href="{% url 'home' %}#about" class="nav-item nav-link">A Propos</a>
+            <a href="{% url 'home' %}#contact" class="nav-item nav-link">Contact</a>
+          </div>
+        </div>
+        <div class="d-none d-xl-flex flex-shirink-0">
+          <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+            <a href="" class="position-relative animated tada infinite">
+              <i class="bi bi-telephone-fill text-white fs-2"></i>
+              <div class="position-absolute" style="top: -7px; left: 20px;">
+                <span><i class="fa fa-comment-dots text-secondary"></i></span>
+              </div>
+            </a>
+          </div>
+          <div class="d-flex flex-column pe-6">
+            <span class="text-white-50">Avez-vous des questions?</span>
+            <span class="text-secondary">Appelez: {% if objet %} {{ objet.tel }} {% endif %}</span>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <!-- Navbar End -->
+  
   <!--  Body Wrapper -->
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
-    <div
-      class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
       <div class="d-flex align-items-center justify-content-center w-100">
         <div class="row justify-content-center w-100">
           <div class="col-md-8 col-lg-6 col-xxl-3">
             <div class="card mb-0">
               <div class="card-body">
                 <a href="{% url 'home' %}" class="text-nowrap logo-img text-center d-block py-3 w-100">
-                  <span class="" style="font-size:26px;">IZIFIND</span>
+                  <span id="izitext" class="" style="font-size:26px;">IZIFIND</span>
                 </a>
-                <p class="text-center" style="font-size:16px;">Votre complice dans la recherche de l'irremplaçable</p>
+                <p class="text-center text-dark" style="font-size:16px;">Votre complice dans la recherche de l'irremplaçable</p>
                 
                 <form method="post" action="{% url 'login' %}">
                   {% csrf_token %}
-                  {% if error_message %}
-                    <p class="text-warning mt-3 mb-3 text-center fs-3">{{ error_message }}</p>
+                  {% if error %}
+                    <p class="text-warning mt-3 mb-3 text-center fs-3">{{ error }}</p>
                   {% endif %}
 
+                  <input type="hidden" name="next" value="{{ next }}">
                   <div class="mb-3">
-                    <label for="email_or_phone" class="form-label">E-mail or Phone</label>
-                    <input type="email_or_phone" class="form-control" id="email_or_phone" name="email_or_phone" autocomplete="email_or_phone" required>
+                    <label for="email_or_phone" class="form-label text-dark fw-bold">E-mail or Phone</label>
+                    <input type="text" class="form-control" id="email_or_phone" name="email_or_phone" autocomplete="email" required>
                   </div>
                   <div class="mb-4">
-                    <label for="Password1" class="form-label">Mot de passe</label>
+                    <label for="Password1" class="form-label text-dark fw-bold">Mot de passe</label>
                     <input type="password" name="password" class="form-control" id="Password1" required>
                   </div>
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                    <a class="text-primary fw-bold" href="{% url 'page_password_email' %}">Mot de passe oublié?</a>
+                  <div class="d-flex align-items-center justify-content-between mb-4 text-dark">
+                    <a class="fw-bold" href="{% url 'page_password_email' %}">Mot de passe oublié?</a>
                   </div>
 
-                  <button type="submit" class="btn btn-primary w-100 py-2 fs-4 mb-2 rounded-2">Connexion</button>
-                  <a class="btn btn-success w-100 py-8 fs-4 mb-4" href="{% url 'page_register' %}">Créer un compte</a>
+                  <button type="submit" class="btn btn-primary w-100 py-2 fs-5 mb-2 rounded-2">Connexion</button>
+                  <a class="btn btn-success w-100 py-8 fs-5 mb-4" href="{% url 'page_register' %}">Créer un compte</a>
                 </form>
 
               </div>
@@ -55,8 +236,64 @@
       </div>
     </div>
   </div>
+
+  <!-- Footer Start -->
+  <div class="container-fluid footer bg-dark wow fadeIn" data-wow-delay=".3s">
+    <div class="container pt-5 pb-4">
+      <div class="row g-5">
+        <div class="col-lg-5 col-md-6">
+          <a href="{% url 'home' %}">
+            <h1 class="text-white fw-bold d-block">Izi<span class="text-secondary">Find</span> </h1>
+          </a>
+          <p class="mt-4 text-light">
+            Pour vous servir et vous aider à chaque étape, nous mettons à votre disposition nos meilleurs services car vos sourires nous tiennent à cœur.
+          </p>
+          <div class="d-flex hightech-link">
+            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-facebook text-primary fs-4"></i></a>
+            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-twitter text-primary fs-4"></i></a>
+            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-instagram text-primary fs-4"></i></a>
+            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-0"><i class="bi bi-linkedin text-primary fs-4"></i></a>
+          </div>
+        </div>
+        <div class="col-xl-5 col-md-6">
+          <a href="#" class="h3 text-secondary">Nous Contactez</a>
+          <div class="text-white mt-4 d-flex flex-column contact-link">
+            <a href="" class="pb-3 text-light border-bottom border-primary"><i class="bi bi-geo-alt-fill text-secondary me-2"></i> {% if objet %} {{ objet.adresse }} {% endif %}</a>
+            <a href="" class="py-3 text-light border-bottom border-primary"><i class="bi bi-telephone-fill text-secondary me-2"></i> {% if objet %} {{ objet.tel }} {% endif %}</a>
+            <a href="mailto:contact@it-servicegroup.com" class="py-3 text-light border-bottom border-primary"><i class="bi bi-envelope-fill text-secondary me-2"></i> {% if objet %} {{ objet.email }} {% endif %}</a>
+          </div>
+        </div>
+      </div>
+      <hr class="text-light mt-5 mb-4">
+      <div class="row">
+        <div class="col-md-6 text-center text-md-start">
+          <span class="text-light"><a href="#" class="text-secondary"><i class="fas fa-copyright text-secondary me-2"></i><script>document.write(new Date().getFullYear())</script> Izifind.bj</a> - Tous droits réservés.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer End -->
+
+  <!-- Back to Top -->
+  <a href="" class="btn btn-secondary btn-square rounded-circle back-to-top"><i class="bi bi-arrow-up-short text-white fs-1"></i></a>
+
+  
+  <!-- JavaScript Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
   <script src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'wow/wow.min.js' %}"></script>
+  <script src="{% static 'easing/easing.min.js' %}"></script>
+  <script src="{% static 'waypoints/waypoints.min.js' %}"></script>
+  <script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
+
+  <!-- Template Javascript -->
+  <script src="{% static 'main.js' %}"></script>
+
+  <!-- Other Javascript files -->
+  <script src="{% static 'offline_write.js' %}"></script>
+  <script src="{% static 'write_effect.js' %}"></script>
 </body>
 
 </html>

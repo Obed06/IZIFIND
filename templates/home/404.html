@@ -5,30 +5,241 @@
         <meta charset="utf-8">
         <title>404 Erreur</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
-
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Saira:wght@500;600;700&display=swap" rel="stylesheet"> 
+        <meta content="objet,perdu,objet-perdu,objet-trouvé,trouve,trouver,trouvé,personne,find,lose," name="keywords">
+        <meta content="Izifind est une plateforme non seulement  valable pour les objets, elle l’est aussi pour les personnes portées disparues" name="description">
+        <link rel="shortcut icon" type="image/jpeg" href="{% static 'logos/favicon.jpeg' %}" />
 
         <!-- Icon Font Stylesheet -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+        <link href="{% static 'all.css' %}" rel="stylesheet">
+        <link href="{% static 'bootstrap-icons.min.css' %}" rel="stylesheet">
 
         <!-- Libraries Stylesheet -->
-        <link href="lib/animate/animate.min.css" rel="stylesheet">
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+        <link href="{% static 'animate/animate.min.css' %}" rel="stylesheet">
+        <link href="{% static 'owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
 
         <!-- Customized Bootstrap Stylesheet -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="{% static 'style.css' %}" rel="stylesheet">
     </head>
 
     <body>
+        <style>
+            /* Dérivé de bleu */
+            .color-0 {color: #3498db;}
+            .color-1 {color: #2980b9;}
+
+            /* Dérivé de vert */
+            .color-2 {color: #2ecc71;}
+            .color-3 {color: #27ae60;}
+            
+            /* Dérivé de vert-citron */
+            .color-4 {color: #16a085;}
+            .color-5 {color: #1abc9c;}
+
+            /* Dérivé de noir */
+            .color-6 {color: #2c3e50;}
+            .color-7 {color: #34495e;}
+            .color-8 {color: #273746;}
+            .color-9 {color: #2e4053;}
+
+            .text-secondary, .nav-item.nav-link.active.text-secondary{
+                color:#26d48c !important;
+            }
+
+            .nav-item.nav-link:hover{
+                transition-delay: .1s;
+                transition-duration: .5s;
+                color:#26d48c;
+            }
+
+
+            .text-secondary.d-none.d-xl-flex {
+                overflow: hidden;
+                white-space: nowrap;
+            }
+
+            .text-secondary.d-none.d-xl-flex small {
+                display: inline-block;
+                padding-left: 100%;
+                animation: marquee 8s linear infinite;
+            }
+
+            @keyframes marquee {
+              0% {
+                transform: translateX(0%);
+              }
+              100% {
+                transform: translateX(-100%);
+              }
+            }
+
+
+            /* Boutons Principaux */
+            .btn-egare {
+                background-color: #26d48c; /* Vert */
+                color: #fff;
+            }
+
+            .btn-retrouve {
+                background-color: #0d6efd;
+                color: #fff;
+            }
+
+            .btn-egare:hover {
+                background-color: #0d6efd;
+                color: white;
+                transition-delay: .6s;
+                transition-duration: 1s;
+            }
+
+            .btn-retrouve:hover {
+                background-color: #26d48c;
+                color: white;
+                transition-delay: .6s;
+                transition-duration: 1s;
+            }
+
+            a.text-decoration-none.btn.text-white.fs-6 {
+                background-color: #26d48c;
+                color:#fff;
+                transition-delay: .2s;
+                transition-duration: .9s;
+            }
+
+            a.text-decoration-none.btn.text-white.fs-6:hover {
+                background-color: #007bff;
+                color:#fff;
+                transition-delay: 0.2s;
+                transition-duration: .9s;
+            }
+
+            /************ STYLES DES BOITES ************/
+
+            /* Animation de zoom à l'affichage */
+            .services-inner .container {
+                opacity: 0;
+                transform: scale(0.8);
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+
+            .services-inner .container.wow {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            /* Animation pour le filtre transparent */
+            .services-inner .bg-white::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 0; /* Début à 0% de remplissage */
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.2); /* Couleur du filtre transparent */
+                z-index: 1;
+                transition: width 1s ease; /* Transition lente */
+            }
+
+            /* Effet de survol pour le filtre transparent */
+            .services-inner .bg-white:hover::after {
+                width: 100%; /* Remplissage horizontal complet */
+            }
+
+            /* Filtre transparent au survol */
+            .services-inner .bg-white {
+                filter: brightness(1); /* Filtre initial */
+                transition: filter 0.3s ease;
+            }
+
+            .services-inner .bg-white:hover {
+                filter: brightness(0.8); /* Filtre au survol */
+            }
+
+            /****************************************************************/
+            /****************************************************************/
+            #dropdownButton {
+                cursor: pointer;
+            }
+
+            .dropdown-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #fff;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+                min-width: 160px;
+                z-index: 1000;
+                padding: 5px 0px 5px 0px;
+                list-style: none;
+            }
+
+            .dropdown-item {
+                display: block;
+                width: 100%;
+                padding: 3px 55px;
+                clear: both;
+                font-weight: 400;
+                color: #444;
+                text-align: inherit;
+                white-space: nowrap;
+                background: none;
+                border: 0;
+                text-decoration: none;
+            }
+
+            .dropdown-item:hover {
+                background-color: #ff6929;
+                color: white;
+            }
+
+            /******************CAROUSEL STYLES******************/
+            .search-container {
+                position: absolute;
+                top: 10%; /* Adjust this value to position the search bar */
+                left: 50%;
+                transform: translateX(-50%);
+                width: 75%; /* Adjust this value to control the width of the search bar */
+                z-index: 10; /* Ensure it is above other content */
+            }
+
+            .search-container .input-group {
+                background: rgba(175, 175, 175, 0.4); /* Semi-transparent background for better visibility */
+                border-radius: 6px;
+            }
+
+            .input-group input::placeholder {
+                color: #1caac9;
+                opacity: 1; /* Fixe l'opacité à 100% */
+            }
+
+            .search-container .form-control {
+                background: transparent;
+                color: rgba(255, 255, 255, 1);
+                border: 0.1px solid white; 
+            }
+
+            .search-container .btn {
+                color: rgba(175, 175, 175, 1);
+            }
+
+            .btn.btn-outline-light {
+                color: #fff;
+                background-color: #1c87c9;
+                font-size: 1.3em;
+            }
+
+            .btn.btn-outline-light:hover {
+                color: #1c87c9;
+                background-color: #fff;
+                font-size: 1.3em;
+            }
+        </style>
+
+
         <!-- Spinner Start -->
         <div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
             <div class="spinner-grow text-primary" role="status"></div>
@@ -40,15 +251,17 @@
             <div class="container">
                 <div class="d-flex justify-content-between topbar">
                     <div class="top-info">
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-map-marker-alt me-2 text-secondary"></i></a>Carrefour Calvaire, Fidjrossè</small>
-                        <small class="me-3 text-white-50"><a href="#"><i class="fas fa-envelope me-2 text-secondary"></i></a>contact@it-servicegroup.com</small>
+                        <small class="me-3 text-white-50"><a href=""><i class="bi bi-geo-alt-fill me-2 text-secondary"></i></a>{% if objet %} {{ objet.adresse }} {% endif %}</small>
+                        <small class="me-3 text-white-50"><a href="mailto:contact@it-servicegroup.com"><i class="bi bi-envelope-fill me-2 text-secondary"></i></a>
+                            {% if objet %} {{ objet.email }} {% endif %}
+                        </small>
                     </div>
-                    <div id="note" class="text-secondary d-none d-xl-flex"><small>Note : Nous vous aidons à trouver ce que vous cherchez</small></div>
+                    <div class="text-secondary d-none d-xl-flex"><small>Note : Nous vous aidons à trouver ce que vous cherchez</small></div>
                     <div class="top-link">
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-facebook-f text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-twitter text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="fab fa-instagram text-primary"></i></a>
-                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-facebook text-primary fs-5"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-twitter text-primary fs-5"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-instagram text-primary fs-5"></i></a>
+                        <a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="bi bi-linkedin text-primary fs-5"></i></a>
                     </div>
                 </div>
             </div>
@@ -59,88 +272,38 @@
         <div class="container-fluid bg-primary">
             <div class="container">
                 <nav class="navbar navbar-dark navbar-expand-lg py-0">
-                    <a href="index.html" class="navbar-brand">
-                        <h1 class="text-white fw-bold d-block">Izi<span class="text-secondary">Find</span></h1>
+                    <a href="{% url 'home' %}" class="navbar-brand">
+                        <a href="" class="text-white fw-bold d-block fs-1">Izi<span class="text-secondary">Find</span> </a>
                     </a>
                     <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
                         <div class="navbar-nav ms-auto mx-xl-auto p-0">
-                            <a href="index.html" class="nav-item nav-link">Accueil</a>
-                            <a href="about.html" class="nav-item nav-link">A Propos</a>
-                            <a href="service.html" class="nav-item nav-link">Services</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="{% url 'home' %}" class="nav-item nav-link active text-secondary">Accueil</a>
+                            <a href="{% url 'home' %}#service" class="nav-item nav-link">Services</a>
+                            <a href="{% url 'home' %}#about" class="nav-item nav-link">A Propos</a>
+                            <a href="{% url 'home' %}#contact" class="nav-item nav-link">Contact</a>
                         </div>
                     </div>
                     <div class="d-none d-xl-flex flex-shirink-0">
                         <div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
                             <a href="" class="position-relative animated tada infinite">
-                                <i class="fa fa-phone-alt text-white fa-2x"></i>
+                                <i class="bi bi-telephone-fill text-white fs-2"></i>
                                 <div class="position-absolute" style="top: -7px; left: 20px;">
                                     <span><i class="fa fa-comment-dots text-secondary"></i></span>
                                 </div>
                             </a>
                         </div>
-                        <div class="d-flex flex-column pe-4 border-end">
+                        <div class="d-flex flex-column pe-6">
                             <span class="text-white-50">Avez-vous des questions?</span>
-                            <span class="text-secondary">Appelez: +229 97 97 12 25</span>
+                            <span class="text-secondary">Appelez: {% if objet %} {{ objet.tel }} {% endif %}</span>
                         </div>
                     </div>
                 </nav>
             </div>
         </div>
         <!-- Navbar End -->
-
-        
-        <!-- Page Header Start -->
-        <div class="container-fluid page-header py-5">
-            <div class="container text-center py-5">
-                <h1 class="display-2 text-white mb-4 animated slideInDown">Erreur 404</h1>
-                <nav aria-label="breadcrumb animated slideInDown">
-                    <ol class="breadcrumb justify-content-center mb-0">
-                        <li class="breadcrumb-item"><a href="#">Accueil</a></li>
-                        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                        <li class="breadcrumb-item" aria-current="page">Erreur</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-        <!-- Page Header End -->
-
-
-        <!-- Fact Start -->
-        <div class="container-fluid bg-secondary py-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 wow fadeIn" data-wow-delay=".1s">
-                        <div class="d-flex counter">
-                            <h1 class="me-3 text-primary">99%</h1>
-                            <h5 class="text-white mt-1">Des clients sont satisfaits</h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 wow fadeIn" data-wow-delay=".3s">
-                        <div class="d-flex counter">
-                            <h1 class="me-3 text-primary">13%</h1>
-                            <h5 class="text-white mt-1">Entreprises désirant s'allier à IziFind</h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 wow fadeIn" data-wow-delay=".5s">
-                        <div class="d-flex counter">
-                            <h1 class="me-3 text-primary counter-value">720</h1>
-                            <h5 class="text-white mt-1">Clients qui adorent IziFind</h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 wow fadeIn" data-wow-delay=".7s">
-                        <div class="d-flex counter">
-                            <h1 class="me-3 text-primary">79.9%</h1>
-                            <h5 class="text-white mt-1">Des Commentaires de clients satisfaits</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Fact End -->
 
 
         <!-- 404 Start -->
@@ -163,35 +326,34 @@
         <!-- Footer Start -->
          <div class="container-fluid footer bg-dark wow fadeIn" data-wow-delay=".3s">
             <div class="container pt-5 pb-4">
-                <div class="row g-6">
-                    <div class="col-lg-4 col-md-6">
-                        <a href="index.html">
+                <div class="row g-5">
+                    <div class="col-lg-5 col-md-6">
+                        <a href="{% url 'home' %}">
                             <h1 class="text-white fw-bold d-block">Izi<span class="text-secondary">Find</span> </h1>
                         </a>
                         <p class="mt-4 text-light">
                             Pour vous servir et vous aider à chaque étape, nous mettons à votre disposition nos meilleurs services car vos sourires nous tiennent à cœur.
                         </p>
                         <div class="d-flex hightech-link">
-                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="fab fa-facebook-f text-primary"></i></a>
-                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="fab fa-twitter text-primary"></i></a>
-                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="fab fa-instagram text-primary"></i></a>
-                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-0"><i class="fab fa-linkedin-in text-primary"></i></a>
+                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-facebook text-primary fs-4"></i></a>
+                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-twitter text-primary fs-4"></i></a>
+                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-instagram text-primary fs-4"></i></a>
+                            <a href="" class="btn-light nav-fill btn btn-square rounded-circle me-0"><i class="bi bi-linkedin text-primary fs-4"></i></a>
                         </div>
                     </div>
-
                     <div class="col-xl-5 col-md-6">
-                        <a href="#" class="h3 text-secondary">Contact Us</a>
+                        <a href="#" class="h3 text-secondary">Nous Contactez</a>
                         <div class="text-white mt-4 d-flex flex-column contact-link">
-                            <a href="#" class="pb-3 text-light border-bottom border-primary"><i class="fas fa-map-marker-alt text-secondary me-2"></i> Carrefour Calvaire, Fidjrossè, Bénin</a>
-                            <a href="#" class="py-3 text-light border-bottom border-primary"><i class="fas fa-phone-alt text-secondary me-2"></i> +229 97 97 12 25</a>
-                            <a href="#" class="py-3 text-light border-bottom border-primary"><i class="fas fa-envelope text-secondary me-2"></i> contact@it-servicegroup.com</a>
+                            <a href="" class="pb-3 text-light border-bottom border-primary"><i class="bi bi-geo-alt-fill text-secondary me-2"></i> {% if objet %} {{ objet.adresse }} {% endif %}</a>
+                            <a href="" class="py-3 text-light border-bottom border-primary"><i class="bi bi-telephone-fill text-secondary me-2"></i> {% if objet %} {{ objet.tel }} {% endif %}</a>
+                            <a href="mailto:contact@it-servicegroup.com" class="py-3 text-light border-bottom border-primary"><i class="bi bi-envelope-fill text-secondary me-2"></i> {% if objet %} {{ objet.email }} {% endif %}</a>
                         </div>
                     </div>
                 </div>
                 <hr class="text-light mt-5 mb-4">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start">
-                        <span class="text-light"><a href="#" class="text-secondary"><i class="fas fa-copyright text-secondary me-2"></i>Izifind.bj</a>, Tous droits réservés.</span>
+                        <span class="text-light"><a href="#" class="text-secondary"><i class="fas fa-copyright text-secondary me-2"></i><script>document.write(new Date().getFullYear())</script> Izifind.bj</a> - Tous droits réservés.</span>
                     </div>
                 </div>
             </div>
@@ -200,19 +362,23 @@
 
 
         <!-- Back to Top -->
-        <a href="#" class="btn btn-secondary btn-square rounded-circle back-to-top"><i class="fa fa-arrow-up text-white"></i></a>
+        <a href="" class="btn btn-secondary btn-square rounded-circle back-to-top"><i class="bi bi-arrow-up-short text-white fs-1"></i></a>
 
         
         <!-- JavaScript Libraries -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="lib/wow/wow.min.js"></script>
-        <script src="lib/easing/easing.min.js"></script>
-        <script src="lib/waypoints/waypoints.min.js"></script>
-        <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'wow/wow.min.js' %}"></script>
+        <script src="{% static 'easing/easing.min.js' %}"></script>
+        <script src="{% static 'waypoints/waypoints.min.js' %}"></script>
+        <script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
 
         <!-- Template Javascript -->
-        <script src="js/main.js"></script>
+        <script src="{% static 'main.js' %}"></script>
+
+        <!-- Other Javascript files -->
+        <script src="{% static 'offline_write.js' %}"></script>
+        <script src="{% static 'write_effect.js' %}"></script>
     </body>
 
 </html>

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -173,8 +174,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_FROM = config('EXPD'),
-EMAIL_HOST_USER = config('VEXPD'),
+EMAIL_FROM = config('EMAIL_FROM')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 
 
 my_way = os.path.join(BASE_DIR, ".env.json")

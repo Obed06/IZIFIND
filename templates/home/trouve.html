@@ -1,0 +1,409 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+	<head>
+		<meta charset="utf-8">
+		<title>Déclarer objet retrouve | IziFind</title>
+		<meta content="width=device-width, initial-scale=1.0" name="viewport">
+		<meta content="objet,perdu,objet-perdu,objet-trouvé,trouve,trouver,trouvé,personne,find,lose," name="keywords">
+		<meta content="Izifind est une plateforme non seulement  valable pour les objets, elle l’est aussi pour les personnes portées disparues" name="description">
+		<link rel="shortcut icon" type="image/jpeg" href="{% static 'logos/favicon.jpeg' %}" />
+
+		<!-- Icon Font Stylesheet -->
+		<link href="{% static 'all.css' %}" rel="stylesheet">
+		<link href="{% static 'bootstrap-icons.min.css' %}" rel="stylesheet">
+
+		<!-- Libraries Stylesheet -->
+		<link href="{% static 'animate/animate.min.css' %}" rel="stylesheet">
+		<link href="{% static 'owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+		<!-- Customized Bootstrap Stylesheet -->
+		<link href="{% static 'bootstrap.min.css' %}" rel="stylesheet">
+
+		<!-- Template Stylesheet -->
+		<link href="{% static 'style.css' %}" rel="stylesheet">
+	</head>
+
+	<body>
+		<style>
+			/* Dérivé de bleu */
+			.color-0 {color: #3498db;}
+			.color-1 {color: #2980b9;}
+
+			/* Dérivé de vert */
+			.color-2 {color: #2ecc71;}
+			.color-3 {color: #27ae60;}
+			
+			/* Dérivé de vert-citron */
+			.color-4 {color: #16a085;}
+			.color-5 {color: #1abc9c;}
+
+			/* Dérivé de noir */
+			.color-6 {color: #2c3e50;}
+			.color-7 {color: #34495e;}
+			.color-8 {color: #273746;}
+			.color-9 {color: #2e4053;}
+
+			.text-secondary, .nav-item.nav-link.active.text-secondary{
+				color:#26d48c !important;
+			}
+
+			.nav-item.nav-link:hover{
+				transition-delay: .1s;
+			    transition-duration: .5s;
+			    color:#26d48c;
+			}
+
+
+			.text-secondary.d-none.d-xl-flex {
+				overflow: hidden;
+				white-space: nowrap;
+			}
+
+			.text-secondary.d-none.d-xl-flex small {
+				display: inline-block;
+				padding-left: 100%;
+				animation: marquee 8s linear infinite;
+			}
+
+			@keyframes marquee {
+			  0% {
+			  	transform: translateX(0%);
+			  }
+			  100% {
+			  	transform: translateX(-100%);
+			  }
+			}
+
+
+			/* Boutons Principaux */
+			.btn-egare {
+			    background-color: #28a745; /* Vert */
+			}
+
+			.btn-retrouve {
+			    background-color: #007bff; /* Bleu */
+			}
+			
+			.btn-recherche {
+			    background-color: #ffc107; /* Jaune */
+			}
+
+			a.text-decoration-none.btn.text-white.fs-6 {
+				background-color: #26d48c;
+				color:#fff;
+				transition-delay: .2s;
+				transition-duration: .9s;
+			}
+
+			a.text-decoration-none.btn.text-white.fs-6:hover {
+				background-color: #007bff;
+				color:#fff;
+				transition-delay: 0.2s;
+				transition-duration: .9s;
+			}
+
+			/************ STYLES DES BOITES ************/
+
+			/* Animation de zoom à l'affichage */
+			.services-inner .container {
+			    opacity: 0;
+			    transform: scale(0.8);
+			    transition: opacity 0.5s ease, transform 0.5s ease;
+			}
+
+			.services-inner .container.wow {
+			    opacity: 1;
+			    transform: scale(1);
+			}
+
+			/* Animation pour le filtre transparent */
+			.services-inner .bg-white::after {
+			    content: '';
+			    position: absolute;
+			    top: 0;
+			    left: 0;
+			    width: 0; /* Début à 0% de remplissage */
+			    height: 100%;
+			    background-color: rgba(255, 255, 255, 0.2); /* Couleur du filtre transparent */
+			    z-index: 1;
+			    transition: width 1s ease; /* Transition lente */
+			}
+
+			/* Effet de survol pour le filtre transparent */
+			.services-inner .bg-white:hover::after {
+			    width: 100%; /* Remplissage horizontal complet */
+			}
+
+			/* Filtre transparent au survol */
+			.services-inner .bg-white {
+			    filter: brightness(1); /* Filtre initial */
+			    transition: filter 0.3s ease;
+			}
+
+			.services-inner .bg-white:hover {
+			    filter: brightness(0.8); /* Filtre au survol */
+			}
+
+			/****************************************************************/
+			/****************************************************************/
+			#dropdownButton {
+			    cursor: pointer;
+			}
+
+			.dropdown-menu {
+			    position: absolute;
+			    top: 100%;
+			    left: 0;
+			    background-color: #fff;
+			    border: 1px solid #ddd;
+			    border-radius: 4px;
+			    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+			    min-width: 160px;
+			    z-index: 1000;
+			    padding: 5px 0px 5px 0px;
+			    list-style: none;
+			}
+
+			.dropdown-item {
+			    display: block;
+			    width: 100%;
+			    padding: 3px 20px;
+			    clear: both;
+			    font-weight: 400;
+			    color: #444;
+			    text-align: inherit;
+			    white-space: nowrap;
+			    background: none;
+			    border: 0;
+			    text-decoration: none;
+			}
+
+			.dropdown-item:hover {
+			    background-color: #ff6929;
+			    color: white;
+			}
+
+		</style>
+
+
+		<!-- Spinner Start -->
+		<div id="spinner" class="show position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+			<div class="spinner-grow text-primary" role="status"></div>
+		</div>
+		<!-- Spinner End -->
+
+		<!-- Topbar Start -->
+		<div class="container-fluid bg-dark py-2 d-none d-md-flex">
+			<div class="container">
+				<div class="d-flex justify-content-between topbar">
+					<div class="top-info">
+						<small class="me-3 text-white-50"><a href=""><i class="bi bi-geo-alt-fill me-2 text-secondary"></i></a>{% if objet %} {{ objet.adresse }} {% endif %}</small>
+						<small class="me-3 text-white-50"><a href="mailto:contact@it-servicegroup.com"><i class="bi bi-envelope-fill me-2 text-secondary"></i></a>
+							{% if objet %} {{ objet.email }} {% endif %}
+						</small>
+					</div>
+					<div class="text-secondary d-none d-xl-flex"><small>Note : Nous vous aidons à trouver ce que vous cherchez</small></div>
+					<div class="top-link">
+						<a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-facebook text-primary fs-5"></i></a>
+						<a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-twitter text-primary fs-5"></i></a>
+						<a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle"><i class="bi bi-instagram text-primary fs-5"></i></a>
+						<a href="" class="bg-light nav-fill btn btn-sm-square rounded-circle me-0"><i class="bi bi-linkedin text-primary fs-5"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Topbar End -->
+
+		<!-- Navbar Start -->
+		<div class="container-fluid bg-primary">
+			<div class="container">
+				<nav class="navbar navbar-dark navbar-expand-lg py-0">
+					<a href="{% url 'home' %}" class="navbar-brand">
+						<a href="{% url 'home' %}" class="text-white fw-bold d-block fs-1">Izi<span class="text-secondary">Find</span> </a>
+					</a>
+					<button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse bg-transparent" id="navbarCollapse">
+						<div class="navbar-nav ms-auto mx-xl-auto p-0">
+							<a href="{% url 'home' %}" class="nav-item nav-link active text-secondary">Accueil</a>
+							<a href="{% url 'perdu' %}#perdu" class="nav-item nav-link">Perdu/Volé</a>
+							<a href="#trouve" class="nav-item nav-link">Retrouvé</a>
+						</div>
+					</div>
+					<div class="d-none d-xl-flex flex-shirink-0">
+						<div id="phone-tada" class="d-flex align-items-center justify-content-center me-4">
+							<a href="" class="position-relative animated tada infinite">
+								<i class="bi bi-telephone-fill text-white fs-2"></i>
+								<div class="position-absolute" style="top: -7px; left: 20px;">
+									<span><i class="fa fa-comment-dots text-secondary"></i></span>
+								</div>
+							</a>
+						</div>
+						<div class="d-flex flex-column pe-6">
+							<span class="text-white-50">Avez-vous des questions?</span>
+							<span class="text-secondary">Appelez: {% if objet %} {{ objet.tel }} {% endif %}</span>
+						</div>
+						<div class="mx-4 my-2 position-relative">
+	                        <a href="{% url 'logout' %}" class="text-decoration-none btn text-white fs-6">Deconnexion</a>
+		                </div>
+					</div>
+				</nav>
+			</div>
+		</div>
+		<!-- Navbar End -->
+
+		<!--Find Start-->
+	    <div class="container mt-5 mb-5">
+	        <h2 id="trouve">Déclaration d'objet retrouvé</h2>
+			<form method="post" action="{% url 'find-list-create' %}">
+			    {% csrf_token %}
+			    <div class="row">
+			        <div class="col-md-4 mb-3">
+			            <label for="date_find" class="form-label text-dark">Date de la découverte</label>
+			            <input type="datetime-local" class="form-control text-dark" style="opacity:80%;" id="date_find" name="date_find" value="{{ find.date_find|date:'Y-m-d\TH:i' }}">
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <label for="nom" class="form-label text-dark">Nom</label>
+			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="nom" name="nom" value="{{ find.nom }}">
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <label for="prenom" class="form-label text-dark">Prénom</label>
+			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="prenom" name="prenom" value="{{ find.prenom }}">
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <label for="tel" class="form-label text-dark">Téléphone</label>
+			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="tel" name="tel" value="{{ find.tel }}">
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <label for="email" class="form-label text-dark">Email</label>
+			            <input type="email" class="form-control text-dark" style="opacity:80%;" id="email" name="email" value="{{ find.email }}">
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <label for="lieu" class="form-label text-dark">Lieu</label>
+			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="lieu" name="lieu" value="{{ find.lieu }}">
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <label for="categorie" class="form-label text-dark">Catégorie</label>
+			            <select class="form-select text-dark" style="opacity:80%;" id="categorie" name="categorie">
+			                {% for cat in categories %}
+			                    <option value="{{ cat.id }}" {% if find.categorie.id == cat.id %}selected{% endif %}>{{ cat.categorie }}</option>
+			                {% endfor %}
+			            </select>
+			        </div>
+			    </div>
+
+			    <div class="row">
+			        <div class="col-md-4 mb-3">
+			            <div class="form-check">
+			                <input class="form-check-input" type="checkbox" id="is_valid" name="is_valid" {% if find.is_valid %}checked{% endif %}>
+			                <label class="form-check-label text-dark" for="is_valid">Validé</label>
+			            </div>
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <div class="form-check">
+			                <input class="form-check-input" type="checkbox" id="is_dropped" name="is_dropped" {% if find.is_dropped %}checked{% endif %}>
+			                <label class="form-check-label text-dark" for="is_dropped">Déposé</label>
+			            </div>
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <div class="form-check">
+			                <input class="form-check-input" type="checkbox" id="is_subscribe" name="is_subscribe" {% if find.is_subscribe %}checked{% endif %}>
+			                <label class="form-check-label text-dark" for="is_subscribe">Abonné</label>
+			            </div>
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <div class="form-check">
+			                <input class="form-check-input" type="checkbox" id="is_published" name="is_published" {% if find.is_published %}checked{% endif %}>
+			                <label class="form-check-label text-dark" for="is_published">Publié</label>
+			            </div>
+			        </div>
+
+			        <div class="col-md-4 mb-3">
+			            <div class="form-check">
+			                <input class="form-check-input" type="checkbox" id="is_retrieve" name="is_retrieve" {% if find.is_retrieve %}checked{% endif %}>
+			                <label class="form-check-label text-dark" for="is_retrieve">Récupéré</label>
+			            </div>
+			        </div>
+			    </div>
+
+			    <div class="row justify-content-center">
+			        <div class="col-md-4">
+			            <button type="submit" class="btn btn-primary mt-3 w-100 fs-4">Soumettre</button>
+			        </div>
+			    </div>
+			</form>
+	    </div>
+	    <!--Find End-->
+
+
+
+		<!-- Footer Start -->
+		 <div class="container-fluid footer bg-dark wow fadeIn" data-wow-delay=".3s">
+			<div class="container pt-5 pb-4">
+				<div class="row g-5">
+					<div class="col-lg-5 col-md-6">
+						<a href="{% url 'home' %}">
+							<h1 class="text-white fw-bold d-block">Izi<span class="text-secondary">Find</span> </h1>
+						</a>
+						<p class="mt-4 text-light">
+							Pour vous servir et vous aider à chaque étape, nous mettons à votre disposition nos meilleurs services car vos sourires nous tiennent à cœur.
+						</p>
+						<div class="d-flex hightech-link">
+							<a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-facebook text-primary fs-4"></i></a>
+							<a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-twitter text-primary fs-4"></i></a>
+							<a href="" class="btn-light nav-fill btn btn-square rounded-circle me-2"><i class="bi bi-instagram text-primary fs-4"></i></a>
+							<a href="" class="btn-light nav-fill btn btn-square rounded-circle me-0"><i class="bi bi-linkedin text-primary fs-4"></i></a>
+						</div>
+					</div>
+					<div class="col-xl-5 col-md-6">
+						<a href="#" class="h3 text-secondary">Nous Contactez</a>
+						<div class="text-white mt-4 d-flex flex-column contact-link">
+							<a href="" class="pb-3 text-light border-bottom border-primary"><i class="bi bi-geo-alt-fill text-secondary me-2"></i> {% if objet %} {{ objet.adresse }} {% endif %}</a>
+							<a href="" class="py-3 text-light border-bottom border-primary"><i class="bi bi-telephone-fill text-secondary me-2"></i> {% if objet %} {{ objet.tel }} {% endif %}</a>
+							<a href="mailto:contact@it-servicegroup.com" class="py-3 text-light border-bottom border-primary"><i class="bi bi-envelope-fill text-secondary me-2"></i> {% if objet %} {{ objet.email }} {% endif %}</a>
+						</div>
+					</div>
+				</div>
+				<hr class="text-light mt-5 mb-4">
+				<div class="row">
+					<div class="col-md-6 text-center text-md-start">
+						<span class="text-light"><a href="#" class="text-secondary"><i class="fas fa-copyright text-secondary me-2"></i><script>document.write(new Date().getFullYear())</script> Izifind.bj</a> - Tous droits réservés.</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Footer End -->
+
+
+		<!-- Back to Top -->
+		<a href="" class="btn btn-secondary btn-square rounded-circle back-to-top"><i class="bi bi-arrow-up-short text-white fs-1"></i></a>
+
+		
+		<!-- JavaScript Libraries -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+		<script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+		<script src="{% static 'wow/wow.min.js' %}"></script>
+		<script src="{% static 'easing/easing.min.js' %}"></script>
+		<script src="{% static 'waypoints/waypoints.min.js' %}"></script>
+		<script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
+
+		<!-- Template Javascript -->
+		<script src="{% static 'main.js' %}"></script>
+
+		<!-- Other Javascript files -->
+		<script src="{% static 'offline_write.js' %}"></script>
+		<script src="{% static 'write_effect.js' %}"></script>
+	</body>
+</html>

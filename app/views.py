@@ -1,19 +1,19 @@
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import send_mail, BadHeaderError
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth import get_user_model, authenticate, login
-from django.contrib.auth.tokens import default_token_generator
-from django.core.exceptions import ValidationError as DjangoValidationError
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, action
@@ -44,12 +44,22 @@ class RegisterUserView(CreateAPIView):
 		html_message = render_to_string('authentication/registration_email.html', {'user': user})
 		plain_message = strip_tags(html_message)
 		from_email = 'leonardovodouhe06@gmail.com'
-		to_email = [user.email]
+		to_email = [user.email_or_phone]
 		send_mail(subject, plain_message, from_email, to_email, html_message=html_message)
 
 	def create(self, request, *args, **kwargs):
-		response = super().create(request, *args, **kwargs)
-		return render(request, 'authentication/200_registration_email.html', status=200)
+		try:
+			response = super().create(request, *args, **kwargs)
+			return render(request, 'authentication/200_registration_email.html', status=200)
+		except DRFValidationError as e:
+			error_message=[]
+			for field, errors in e.detail.items():
+				for error in errors:
+					sentence = str(error).replace("Ce champ", "Le champ 'E-mail ou Tel'")
+					error_message.append(sentence)
+			return render(request, 'authentication/authentication-register.html', {'errors':error_message}, status=400)
+		except Exception as e:
+			return render(request, 'authentication/authentication-register.html', {'errors': ["Lisez et remplissez chaque champ avec sa valeur"]})
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -120,25 +130,35 @@ def login_view(request):
 	if request.method == 'POST':
 		email_or_phone = request.data.get('email_or_phone')
 		password = request.data.get('password')
+		
+		u = User.objects.filter(Q(email_or_phone=email_or_phone)).first()
+		info = Info.objects.first()
 
 		user = authenticate(request, email_or_phone=email_or_phone, password=password)
 
 		if user is not None:
 			login(request, user)
-			return redirect('home')
+			return render(request, 'home/index.html', {'u':u, 'objet':info})
 		else:
-			return Response({'error': 'Identifiant ou mot de passe incorrect.'}, status=400)
+			return render(request, 'authentication/authentication-login.html', {'error': 'Identifiant ou mot de passe incorrect.'})
 	else:
-		return Response({'error': 'La méthode HTTP doit être POST.'}, status=405)
+		return Response(request, 'authentication/authentication-login.html', {'error': 'La méthode HTTP doit être POST.'})
+
+
+@api_view(['GET', 'POST'])
+def logout_view(request):
+	info = Info.objects.first()
+	logout(request)
+	return render(request, 'home/logout.html', {'objet':info})
 
 
 @api_view(['POST'])
 def reset_password_email(request):
 	if request.method == 'POST':
-		email = request.data.get('email')
+		email_or_phone = request.data.get('email_or_phone')
 
 		try:
-			user = User.objects.get(email=email)
+			user = User.objects.get(email_or_phone=email_or_phone)
 		except User.DoesNotExist:
 			return Response({'message': 'Utilisateur non trouvé.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -151,21 +171,24 @@ def reset_password_email(request):
 
 		# Envoyer l'e-mail avec le lien de réinitialisation de mot de passe
 		subject = 'Réinitialisation de mot de passe'
-		html_message = render_to_string('authentication/reset_message.html', {'reset_url':reset_url, 'email':email})
+		html_message = render_to_string('authentication/reset_message.html', {'reset_url':reset_url, 'email_or_phone':email_or_phone})
 		
 		from_email = 'leonardovodouhe06@gmail.com'
-		to_email = [user.email]
+		to_email = [user.email_or_phone]
 
 		try:
 			send_mail(subject, '', from_email, to_email, html_message=html_message, fail_silently=False)
 			# return Response({'message': 'Un e-mail de réinitialisation de mot de passe a été envoyé.'}, status=status.HTTP_200_OK)
-			return render(request, 'authentication/200_reset_password_email_sent.html')
+			info = Info.objects.first()
+			return render(request, 'authentication/200_reset_password_email_sent.html', {"objet": info})
 		except BadHeaderError:
 			# return Response({'message': 'Erreur lors de l\'envoi de l\'e-mail.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-			return render(request, 'authentication/500_reset_password_email_sent.html')
+			info = Info.objects.first()
+			return render(request, 'authentication/500_reset_password_email_sent.html', {"objet": info})
 		except (DjangoValidationError, DRFValidationError) as e:
 			# return Response({'message': 'Erreur lors de la validation des données.', 'errors': e.detail}, status=status.HTTP_400_BAD_REQUEST)
-			return render(request, 'authentication/400_reset_password_email_sent.html')
+			info = Info.objects.first()
+			return render(request, 'authentication/400_reset_password_email_sent.html', {"objet": info})
 	else:
 		return Response({'message': 'Méthode non autorisée.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
@@ -186,7 +209,8 @@ def reset_password_confirm(request, uidb64, token):
 		else:
 			form = SetPasswordForm(user)
 
-		return render(request, 'authentication/reset_password_confirm.html', {'form': form, 'uidb64': uidb64, 'token': token})
+		info = Info.objects.first()
+		return render(request, 'authentication/reset_password_confirm.html', {'form': form, 'uidb64': uidb64, 'token': token, 'objet':info})
 
 	else:
 		messages.error(request, 'Ce lien de réinitialisation de mot de passe est invalide.')
@@ -678,27 +702,41 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
 def page_register(request):
-	return render(request, 'authentication/authentication-register.html')
+	info = Info.objects.first()
+	return render(request, 'authentication/authentication-register.html', {"objet": info})
 
 
 def page_login(request):
-	return render(request, 'authentication/authentication-login.html')
+	info = Info.objects.first()
+	return render(request, 'authentication/authentication-login.html', {"objet": info})
 
 
 def page_password_email(request):
-	return render(request, 'authentication/reset_password_email.html')
+	info = Info.objects.first()
+	return render(request, 'authentication/reset_password_email.html', {"objet":info})
 
 
 def home(request):
 	info = Info.objects.first()
-	return render(request, 'home/index.html', {"objet":info})
+	return render(request, 'home/index.html', {'objet': info})
 
 
 def lose(request):
 	info = Info.objects.first()
-	return render(request, 'home/perdu.html', {"objet":info})
+	perdre = Lose.objects.all()
+	categorie = Categorie.objects.all()
+	type_categorie = TypeCategorie.objects.all()
+
+	data = {
+		"objet":info,
+		"lose":perdre,
+		"categorie":categorie,
+		"type_categorie":type_categorie
+	}
+	return render(request, 'home/perdu.html', context=data)
 
 
 def find(request):
 	info = Info.objects.first()
 	return render(request, 'home/trouve.html', {"objet":info})
+

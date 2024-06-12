@@ -7,10 +7,14 @@
 </head>
 <body>
     <section style="font-size:20px; margin-top:14px; margin-left:14px;">
-        <p>Bonjour <span style="font-weight:bold;">{{ email }},</span></p>
+        <p>Bonjour <span style="font-weight:bold;">{{ email_or_phone }},</span></p>
         <p>
-            Vous avez demandé la réinitialisation de votre mot de passe. Si c'est le cas, cliquez sur le lien suivant pour réinitialiser votre mot de passe :
-            <a style="text-decoration:none; color:#27ae60" href="{{ reset_url }}">{{ reset_url }}</a>
+            Vous avez demandé la réinitialisation de votre mot de passe. Si c'est le cas, cliquez sur le bouton suivant pour y parvenir :
+            <a style="text-decoration:none; color:#27ae60" href="{{ reset_url }}">
+                <button style="background-color:#27ae60; font-size:20px; color:#fff; border:none; border-radius:8px; padding:6px;">
+                    Modifier
+                </button>
+            </a>
         </p>
         <p>Assurez-vous de changer ce mot de passe dès que possible.</p>
         <p>
