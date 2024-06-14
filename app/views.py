@@ -130,6 +130,7 @@ def login_view(request):
 	if request.method == 'POST':
 		email_or_phone = request.data.get('email_or_phone')
 		password = request.data.get('password')
+		next_url = request.POST.get('next', '')
 		
 		u = User.objects.filter(Q(email_or_phone=email_or_phone)).first()
 		info = Info.objects.first()
@@ -138,11 +139,16 @@ def login_view(request):
 
 		if user is not None:
 			login(request, user)
-			return render(request, 'home/index.html', {'u':u, 'objet':info})
+			if next_url:
+				return redirect(next_url)
+			else:
+				return redirect(reverse('home'))
 		else:
-			return render(request, 'authentication/authentication-login.html', {'error': 'Identifiant ou mot de passe incorrect.'})
-	else:
-		return Response(request, 'authentication/authentication-login.html', {'error': 'La méthode HTTP doit être POST.'})
+			error = "Identifiants invalides. Veuillez réessayer."
+			return render(request, 'authentication/authentication-login.html', {'error': error})
+	elif request.method == 'GET':
+		info = Info.objects.first()
+		return render(request, 'authentication/authentication-login.html', {'objet':info})
 
 
 @api_view(['GET', 'POST'])
@@ -205,7 +211,7 @@ def reset_password_confirm(request, uidb64, token):
 			form = SetPasswordForm(user, request.POST)
 			if form.is_valid():
 				form.save()
-				return redirect('page_login')
+				return redirect('login')
 		else:
 			form = SetPasswordForm(user)
 
@@ -706,11 +712,6 @@ def page_register(request):
 	return render(request, 'authentication/authentication-register.html', {"objet": info})
 
 
-def page_login(request):
-	info = Info.objects.first()
-	return render(request, 'authentication/authentication-login.html', {"objet": info})
-
-
 def page_password_email(request):
 	info = Info.objects.first()
 	return render(request, 'authentication/reset_password_email.html', {"objet":info})
@@ -721,6 +722,7 @@ def home(request):
 	return render(request, 'home/index.html', {'objet': info})
 
 
+@login_required(login_url='login')
 def lose(request):
 	info = Info.objects.first()
 	perdre = Lose.objects.all()

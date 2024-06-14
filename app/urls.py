@@ -66,7 +66,6 @@ urlpatterns = [
 
 
 	path('page_register/', page_register, name='page_register'),
-	path('page_login/', page_login, name='page_login'),
 	path('page_password_email/', page_password_email, name='page_password_email'),
 	path('home/', home, name='home'),
 	

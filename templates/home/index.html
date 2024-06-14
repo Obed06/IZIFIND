@@ -203,7 +203,7 @@
 			/******************CAROUSEL STYLES******************/
 		    .search-container {
 		        position: absolute;
-		        top: 10%; /* Adjust this value to position the search bar */
+		        top: 20%; /* Adjust this value to position the search bar */
 		        left: 50%;
 		        transform: translateX(-50%);
 		        width: 75%; /* Adjust this value to control the width of the search bar */
@@ -250,7 +250,7 @@
 			    }
 			    .search-container {
 			        font-size: 18px;
-			        margin-bottom: 5rem !important; /* mb-5 */
+			        margin-bottom: 3rem !important; /* mb-5 */
 			    }
 			    .search-container button {
 			        font-size: 16px;
@@ -264,7 +264,7 @@
 			    }
 			    .search-container {
 			        font-size: 16px;
-			        margin-bottom: 4rem !important; /* mb-5 */
+			        margin-bottom: 2.5rem !important; /* mb-5 */
 			    }
 			    .search-container button {
 			        font-size: 14px;
@@ -278,7 +278,7 @@
 			    }
 			    .search-container {
 			        font-size: 14px;
-			        margin-bottom: 3rem !important; /* mb-5 */
+			        margin-bottom: 2rem !important; /* mb-5 */
 			    }
 			    .search-container button {
 			        font-size: 12px;
@@ -292,7 +292,7 @@
 			    }
 			    .search-container {
 			        font-size: 12px;
-			        margin-bottom: 2rem !important; /* mb-5 */
+			        margin-bottom: 1.5rem !important; /* mb-5 */
 			    }
 			    .search-container button {
 			        font-size: 10px;
@@ -313,8 +313,14 @@
 			    }
 			}
 
-			@media screen and (max-width: 970px) {
-			    .search-container {
+			@media screen and (max-width: 930px) {
+			    .search-container, .text-secondary.h4.animated.fadeInUp.fs-4, .text-white.display-1.mb-4.animated.fs-1 {
+			        display: none;
+			    }
+			}
+
+			@media screen and (max-width: 1300px) {
+			    .text-secondary.h4.animated.fadeInUp.fs-4, .text-white.display-1.mb-4.animated.fs-1 {
 			        display: none;
 			    }
 			}
@@ -381,16 +387,16 @@
 							<span class="text-secondary">Appelez: {% if objet %} {{ objet.tel }} {% endif %}</span>
 						</div>
 						<div class="mx-4 my-2 position-relative">
-		                    {% if u %}
+		                    {% if user %}
 		                        <button id="dropdownButton" class="btn bg-success text-white">
-		                            {{ u.email_or_phone }}
+		                            {{ user.email_or_phone }}
 		                        </button>
 		                        <ul id="dropdownMenu" class="dropdown-menu" style="display: none;">
 		                            <li><a href="{% url 'page_password_email' %}" class="dropdown-item">Changer mot de passe</a></li>
 		                            <li><a href="{% url 'logout' %}" class="dropdown-item">Déconnexion</a></li>
 		                        </ul>
 		                    {% else %}
-		                        <a href="{% url 'page_login' %}" class="text-decoration-none btn text-white fs-6">Connexion</a>
+		                        <a href="{% url 'login' %}" class="text-decoration-none btn text-white fs-6">Connexion</a>
 		                    {% endif %}
 		                </div>
 					</div>
@@ -440,13 +446,13 @@
 		                        </div>
 
 		                        <h6 class="text-secondary h4 animated fadeInUp fs-4">Meilleure Solution Digitale</h6>
-		                        <h2 class="text-white display-1 mb-4 animated fadeInRight fs-2">Retrouvez vos biens et proches égarés en un seul clic.</h2>
+		                        <h2 class="text-white display-1 mb-4 animated fadeInRight fs-1">Retrouvez vos biens et proches égarés en un seul clic.</h2>
 		                        <div class="mb-4 text-white animated fadeInDown">
 		                            <span class="fs-3">Bienvenue sur</span> <span class='px-2 fs-3'>IZIFIND,</span>
 		                            <span class="container-md writing fs-2 d-flex justify-content-center p-2"></span>
 		                        </div>
 
-							    <a href="{% if user.is_authenticated %}{% url 'perdu' %}{% else %}{% url 'page_login'%}?next={% url 'perdu' %}{% endif %}" class="me-2 text-decoration-none">
+							    <a href="{% url 'perdu' %}" class="me-2 text-decoration-none">
 							        <button type="button" class="px-4 py-sm-3 px-sm-5 btn btn-egare rounded-pill" style="font-size:18px;">
 							            Déclarer un objet
 							        </button>
@@ -481,12 +487,12 @@
 		                        </div>
 
 		                        <h6 class="text-secondary h4 animated fadeInUp fs-4">Meilleure Solution Digitale</h6>
-		                        <h2 class="text-white display-1 mb-4 animated fadeInLeft fs-2">Ne laissez rien perdu pour toujours. Trouvez-le avec nous!</h2>
+		                        <h2 class="text-white display-1 mb-4 animated fadeInLeft fs-1">Ne laissez rien perdu pour toujours. Trouvez-le avec nous!</h2>
 		                        <div class="mb-4 text-white animated fadeInDown">
 		                            <span class="fs-3">Bienvenue sur</span> <span class='px-2 fs-3'>IZIFIND,</span>
 		                            <span class="container-md writing1 fs-2 d-flex justify-content-center p-2"></span>
 		                        </div>
-							    <a href="{% if user.is_authenticated %}{% url 'perdu' %}{% else %}{% url 'page_login'%}?next={% url 'perdu' %}{% endif %}" class="me-2 text-decoration-none">
+							    <a href="{% url 'perdu' %}" class="me-2 text-decoration-none">
 							        <button type="button" class="px-4 py-sm-3 px-sm-5 btn btn-egare rounded-pill" style="font-size:18px;">
 							            Déclarer un objet
 							        </button>

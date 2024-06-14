@@ -261,37 +261,37 @@
 			<form method="post" action="{% url 'find-list-create' %}">
 			    {% csrf_token %}
 			    <div class="row">
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="date_find" class="form-label text-dark">Date de la découverte</label>
 			            <input type="datetime-local" class="form-control text-dark" style="opacity:80%;" id="date_find" name="date_find" value="{{ find.date_find|date:'Y-m-d\TH:i' }}">
 			        </div>
 
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="nom" class="form-label text-dark">Nom</label>
 			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="nom" name="nom" value="{{ find.nom }}">
 			        </div>
 
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="prenom" class="form-label text-dark">Prénom</label>
 			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="prenom" name="prenom" value="{{ find.prenom }}">
 			        </div>
 
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="tel" class="form-label text-dark">Téléphone</label>
 			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="tel" name="tel" value="{{ find.tel }}">
 			        </div>
 
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="email" class="form-label text-dark">Email</label>
 			            <input type="email" class="form-control text-dark" style="opacity:80%;" id="email" name="email" value="{{ find.email }}">
 			        </div>
 
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="lieu" class="form-label text-dark">Lieu</label>
 			            <input type="text" class="form-control text-dark" style="opacity:80%;" id="lieu" name="lieu" value="{{ find.lieu }}">
 			        </div>
 
-			        <div class="col-md-4 mb-3">
+			        <div class="col-md-4 col-lg-6 mb-3">
 			            <label for="categorie" class="form-label text-dark">Catégorie</label>
 			            <select class="form-select text-dark" style="opacity:80%;" id="categorie" name="categorie">
 			                {% for cat in categories %}

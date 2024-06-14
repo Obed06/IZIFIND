@@ -247,13 +247,34 @@
 							<span class="text-secondary">Appelez: {% if objet %} {{ objet.tel }} {% endif %}</span>
 						</div>
 						<div class="mx-4 my-2 position-relative">
-	                        <a href="{% url 'logout' %}" class="text-decoration-none btn text-white fs-6">Deconnexion</a>
+							{% if user %}
+		                        <button id="dropdownButton" class="btn bg-success text-white">
+		                            {{ user.email_or_phone }}
+		                        </button>
+		                        <ul id="dropdownMenu" class="dropdown-menu" style="display: none;">
+		                            <li><a href="{% url 'page_password_email' %}" class="dropdown-item">Changer mot de passe</a></li>
+		                            <li><a href="{% url 'logout' %}" class="dropdown-item">Déconnexion</a></li>
+		                        </ul>
+		                    {% else %}
+	                        	<a href="{% url 'logout' %}" class="text-decoration-none btn text-white fs-6">Deconnexion</a>
+	                        {% endif %}
 		                </div>
 					</div>
 				</nav>
 			</div>
 		</div>
 		<!-- Navbar End -->
+
+		<script>
+			document.getElementById('dropdownButton').addEventListener('click', function() {
+			    var dropdownMenu = document.getElementById('dropdownMenu');
+			    if (dropdownMenu.style.display === 'none') {
+			        dropdownMenu.style.display = 'block';
+			    } else {
+			        dropdownMenu.style.display = 'none';
+			    }
+			});
+		</script>
 
 		<!--Lose Start-->
 		<div class="container mt-5 mb-5">

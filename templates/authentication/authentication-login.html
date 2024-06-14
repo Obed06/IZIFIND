@@ -206,13 +206,14 @@
                 </a>
                 <p class="text-center text-dark" style="font-size:16px;">Votre complice dans la recherche de l'irremplaçable</p>
                 
-                <form method="post" action="{% url 'login' %}">
+                <form method="post" action="{% url 'login' %}" id='login-form'>
                   {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.GET.next }}">
+
                   {% if error %}
                     <p class="text-warning mt-3 mb-3 text-center fs-3">{{ error }}</p>
                   {% endif %}
 
-                  <input type="hidden" name="next" value="{{ next }}">
                   <div class="mb-3">
                     <label for="email_or_phone" class="form-label text-dark fw-bold">E-mail or Phone</label>
                     <input type="text" class="form-control" id="email_or_phone" name="email_or_phone" autocomplete="email" required>
@@ -228,7 +229,6 @@
                   <button type="submit" class="btn btn-primary w-100 py-2 fs-5 mb-2 rounded-2">Connexion</button>
                   <a class="btn btn-success w-100 py-8 fs-5 mb-4" href="{% url 'page_register' %}">Créer un compte</a>
                 </form>
-
               </div>
             </div>
           </div>
